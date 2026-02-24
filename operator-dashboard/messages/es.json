@@ -1,0 +1,611 @@
+{
+  "nav": {
+    "dashboard": "Panel",
+    "machines": "Maquinas",
+    "products": "Productos",
+    "inventory": "Inventario",
+    "restock": "Reabastecer",
+    "transactions": "Transacciones",
+    "financials": "Finanzas",
+    "discounts": "Descuentos",
+    "analytics": "Analiticas",
+    "settings": "Configuracion",
+    "help": "Ayuda"
+  },
+  "topbar": {
+    "operator": "Operador",
+    "language": "Idioma",
+    "mobileMenu": "Abrir menu"
+  },
+  "status": {
+    "online": "En linea",
+    "offline": "Fuera de linea",
+    "warning": "Advertencia",
+    "error": "Error",
+    "unknown": "Desconocido",
+    "live": "EN VIVO"
+  },
+  "dashboard": {
+    "homeTitle": "Inicio",
+    "fleet": {
+      "title": "Salud de Flota",
+      "total": "Total",
+      "online": "En linea",
+      "offline": "Fuera de linea",
+      "warnings": "Advertencias"
+    },
+    "alerts": {
+      "title": "Alertas Criticas",
+      "allGood": "Todas las maquinas operan normalmente",
+      "goToMachine": "Ir a maquina",
+      "offline": "OFFLINE",
+      "tooWarm": "TOO_WARM",
+      "rfidError": "RFID_ERROR",
+      "lowStock": "LOW_STOCK"
+    },
+    "metrics": {
+      "title": "Metricas de Hoy",
+      "revenue": "Ingresos",
+      "transactions": "Transacciones",
+      "items": "Items vendidos"
+    },
+    "machinesGrid": {
+      "title": "Tarjetas de Maquinas",
+      "location": "Ubicacion",
+      "temperature": "Temp",
+      "todayRevenue": "Ingreso Hoy",
+      "goToMachine": "Abrir"
+    }
+  },
+  "productCatalog": {
+    "title": "Catalogo de Productos",
+    "subtitle": "Administra productos, categorias y precios en tus maquinas",
+    "importCsv": "Importar CSV",
+    "addProduct": "Agregar Producto",
+    "searchPlaceholder": "Buscar por nombre o SKU",
+    "categoryAll": "Todas las categorias",
+    "statusAll": "Todos los estados",
+    "statusActive": "Activo",
+    "statusArchived": "Archivado",
+    "tablePhoto": "Foto",
+    "tableName": "Nombre",
+    "tableCategory": "Categoria",
+    "tablePrice": "Precio Base",
+    "tableStatus": "Estado",
+    "empty": "No se encontraron productos con los filtros actuales."
+  },
+  "productEditor": {
+    "createTitle": "Agregar Producto",
+    "createSubtitle": "Crea un nuevo producto del catalogo",
+    "editTitle": "Editar Producto",
+    "editSubtitle": "Actualiza detalles, nutricion y precios por maquina",
+    "back": "Volver",
+    "archive": "Archivar Producto",
+    "tabs": {
+      "basic": "Info Basica",
+      "nutrition": "Info Nutricional",
+      "pricing": "Precios por Maquina"
+    },
+    "name": "Nombre",
+    "required": "Este campo es obligatorio",
+    "sku": "SKU",
+    "skuPlaceholder": "Se genera automaticamente si queda vacio",
+    "category": "Categoria",
+    "categoryNone": "Sin categoria",
+    "addCategory": "Agregar categoria",
+    "newCategoryName": "Nombre de nueva categoria",
+    "createCategory": "Crear",
+    "categoryCreateNameRequired": "El nombre de categoria es obligatorio",
+    "categoryCreateError": "No se pudo crear la categoria",
+    "categoryCreateSuccess": "Categoria creada",
+    "basePrice": "Precio Base",
+    "priceInvalid": "Ingresa un precio mayor a 0",
+    "description": "Descripcion",
+    "photo": "Foto",
+    "photoHint": "Arrastra una imagen o haz clic para subir",
+    "servingSize": "Tamano de Porcion",
+    "calories": "Calorias",
+    "totalFat": "Grasa Total (g)",
+    "saturatedFat": "Grasa Saturada (g)",
+    "sodium": "Sodio (mg)",
+    "totalCarbs": "Carbohidratos Totales (g)",
+    "fiber": "Fibra (g)",
+    "sugars": "Azucares (g)",
+    "protein": "Proteina (g)",
+    "allergens": "Alergenos",
+    "allergenLabels": {
+      "gluten": "Gluten",
+      "dairy": "Lacteos",
+      "nuts": "Nueces",
+      "soy": "Soya",
+      "eggs": "Huevos",
+      "fish": "Pescado",
+      "shellfish": "Mariscos",
+      "sesame": "Sesamo"
+    },
+    "pricingHint": "Deja vacio el precio por maquina para heredar el precio base.",
+    "pricingMachine": "Maquina",
+    "pricingOverride": "Precio Override",
+    "save": "Guardar Producto",
+    "saveError": "No se pudo guardar el producto",
+    "saveSuccess": "Producto guardado correctamente",
+    "photoUploadError": "Fallo la subida de la foto",
+    "photoSaveError": "No se pudo guardar la URL de foto",
+    "archiveConfirm": "Archivar este producto?",
+    "archiveError": "No se pudo archivar el producto"
+  },
+  "productImport": {
+    "title": "Importacion Masiva de Productos",
+    "subtitle": "Sube productos desde un archivo CSV",
+    "step1": "Paso 1 - Descargar plantilla",
+    "step2": "Paso 2 - Subir CSV",
+    "step3": "Paso 3 - Vista previa y validacion",
+    "step4": "Paso 4 - Importar filas validas",
+    "downloadTemplate": "Descargar Plantilla",
+    "uploadCsv": "Seleccionar archivo CSV",
+    "validCount": "{count} validas",
+    "invalidCount": "{count} invalidas",
+    "headers": {
+      "name": "Nombre",
+      "category": "Categoria",
+      "price": "Precio",
+      "error": "Validacion"
+    },
+    "empty": "Sube un archivo CSV para previsualizar filas.",
+    "importButton": "Importar {count} Productos Validos",
+    "downloadSkipped": "Descargar CSV de Filas Omitidas",
+    "importResult": "{imported} productos importados, {skipped} omitidos",
+    "importError": "Fallo la importacion",
+    "errors": {
+      "missingName": "Falta el nombre requerido",
+      "invalidPrice": "El precio debe ser numerico y mayor a 0"
+    }
+  },
+  "inventoryTags": {
+    "title": "Gestion de Tags RFID",
+    "subtitle": "Asigna EPCs, ordena tags, verifica inventario de maquinas y resuelve stickers desprendidos",
+    "tabs": {
+      "assign": "Asignar EPCs",
+      "order": "Ordenar Tags",
+      "orders": "Ordenes de Tags",
+      "verify": "Verificar Inventario"
+    },
+    "readOnlyMessage": "Tu rol tiene acceso de solo lectura para inventario. Contacta a un admin para modificar registros RFID.",
+    "common": {
+      "cancel": "Cancelar"
+    },
+    "assign": {
+      "step1Title": "Paso 1 - Seleccionar Producto",
+      "productSearch": "Buscar productos...",
+      "step2Title": "Paso 2 - Seleccionar Tipo de Tag",
+      "step3Title": "Paso 3 - Fecha de Expiracion",
+      "expirationHint": "La fecha de expiracion usada se recuerda por producto.",
+      "productPreview": "Confirmacion de Producto",
+      "readyToScan": "Listo para ciclo de escaneo",
+      "noProductSelected": "Selecciona un producto para iniciar el escaneo.",
+      "step4Title": "Paso 4 - Ciclo de Escaneo",
+      "scanPlaceholder": "Escanea EPC o escribe manualmente",
+      "selectProductFirst": "Selecciona un producto antes de escanear EPCs.",
+      "scanSuccess": "{epc} asignado",
+      "scanError": "No se pudo asignar el EPC",
+      "inMachine": "El tag ya esta en una maquina.",
+      "inMachineWithName": "El tag ya esta en maquina: {machine}",
+      "doneScanning": "Terminar Escaneo",
+      "resumeScanning": "Reanudar Escaneo",
+      "runningTally": "Conteo de sesion",
+      "noSessionScans": "Aun no hay tags asignados en esta sesion.",
+      "totalAssigned": "Total asignado",
+      "latestScans": "Escaneos recientes",
+      "noLatestScans": "Sin escaneos recientes.",
+      "sessionSummaryTitle": "Resumen de Sesion",
+      "sessionSummaryBody": "{count} tags asignados en esta sesion.",
+      "processing": "Procesando escaneo...",
+      "repurposeTitle": "Reutilizar Tag",
+      "repurposeBody": "Este tag fue usado por ultima vez para {product}. Reasignarlo ahora?",
+      "repurposeAction": "Reutilizar Tag",
+      "repurposeError": "No se pudo reutilizar el tag",
+      "repurposeSuccess": "{epc} reutilizado",
+      "unknownProduct": "Producto desconocido"
+    },
+    "detached": {
+      "title": "Flujo de Sticker Desprendido",
+      "lookupPlaceholder": "Escanea o escribe EPC",
+      "lookup": "Buscar",
+      "lookupError": "No se pudo encontrar el EPC",
+      "lastMachine": "Ultima maquina conocida",
+      "currentStatus": "Estado actual",
+      "optionSame": "Readjuntar al mismo producto",
+      "optionDifferent": "Readjuntar a diferente producto",
+      "optionLost": "Marcar como perdido",
+      "selectProduct": "Selecciona nuevo producto",
+      "apply": "Aplicar Resolucion",
+      "resolveError": "No se pudo aplicar la accion del sticker desprendido",
+      "resolveSuccess": "Accion de sticker desprendido aplicada"
+    },
+    "order": {
+      "title": "Ordenar Tags RFID",
+      "tagType": "Tipo de Tag",
+      "quantity": "Cantidad",
+      "notes": "Notas",
+      "submit": "Crear Orden de Tags",
+      "submitError": "No se pudo enviar la orden de tags",
+      "submitSuccessEmail": "Orden de tags enviada. Correo de confirmacion enviado.",
+      "submitSuccessNoEmail": "Orden de tags enviada. No se envio correo de confirmacion.",
+      "address": {
+        "line1": "Direccion Linea 1",
+        "line2": "Direccion Linea 2",
+        "city": "Ciudad",
+        "state": "Estado",
+        "postalCode": "Codigo Postal",
+        "country": "Pais",
+        "contactName": "Nombre de Contacto",
+        "phone": "Telefono"
+      }
+    },
+    "orders": {
+      "title": "Ordenes de Tags",
+      "id": "ID Orden",
+      "type": "Tipo de Tag",
+      "quantity": "Cantidad",
+      "status": "Estado",
+      "created": "Creado",
+      "empty": "Aun no hay ordenes de tags."
+    },
+    "verify": {
+      "title": "Verificar Inventario de Maquina",
+      "machine": "Maquina",
+      "scanned": "EPCs Escaneados",
+      "placeholder": "Un EPC por linea",
+      "compare": "Comparar",
+      "compareError": "No se pudo comparar inventario",
+      "compareSuccess": "Comparacion completada.",
+      "summary": "Esperados: {expected} | Escaneados: {scanned} | Faltantes: {missing} | Inesperados: {unexpected}",
+      "missing": "Faltantes",
+      "unexpected": "Inesperados",
+      "none": "Ninguno",
+      "markLost": "Marcar Perdido",
+      "register": "Registrar",
+      "markLostError": "No se pudo marcar el EPC como perdido",
+      "registerError": "No se pudo registrar el EPC"
+    }
+  },
+  "inventoryDashboard": {
+    "title": "Panel de Inventario",
+    "subtitle": "Visibilidad en tiempo real del inventario en maquinas, riesgo de expiracion y niveles par",
+    "actions": {
+      "expirationReport": "Reporte de Expiracion",
+      "manageTags": "Gestionar Tags",
+      "activityLog": "Actividad de Reabastecimiento"
+    },
+    "summary": {
+      "title": "Resumen de Inventario en Vivo",
+      "totalItems": "Total de Items en Maquinas",
+      "expiringSoon": "Por Expirar (<72h)",
+      "expired": "Expirados",
+      "lowStock": "Stock Bajo",
+      "offline": "SIN CONEXION",
+      "lastUpdated": "Ultima actualizacion hace {minutes} min",
+      "refresh": "Actualizar"
+    },
+    "table": {
+      "title": "Inventario por Maquina",
+      "machineName": "Nombre de Maquina",
+      "machineStatus": "Estado",
+      "totalItems": "Total Items",
+      "expiring": "Por Expirar",
+      "expired": "Expirados",
+      "lowStock": "Stock Bajo",
+      "product": "Producto",
+      "count": "Cantidad",
+      "parLevel": "Nivel Par",
+      "nextExpiry": "Proxima Expiracion",
+      "productStatus": "Estado",
+      "quickActions": "Acciones Rapidas",
+      "setParLevel": "Definir Nivel Par",
+      "saveParLevel": "Guardar Nivel Par",
+      "parInvalid": "El nivel par debe ser 0 o mayor",
+      "parSaveError": "No se pudo guardar el nivel par",
+      "parSaveSuccess": "Nivel par actualizado",
+      "noProductsForMachine": "Aun no hay filas de productos para esta maquina.",
+      "statusStocked": "STOCKED",
+      "statusLow": "LOW",
+      "statusOut": "OUT",
+      "statusExpiring": "EXPIRING"
+    }
+  },
+  "inventoryExpiration": {
+    "title": "Reporte de Expiracion",
+    "subtitle": "Items en maquinas agrupados por ventana de expiracion",
+    "backToInventory": "Volver a Inventario",
+    "removeSuccess": "Item removido del inventario de maquina",
+    "removeError": "No se pudo remover el item",
+    "sections": {
+      "expired": "EXPIRADOS",
+      "today": "HOY",
+      "oneToThree": "1-3 DIAS",
+      "fourToSeven": "4-7 DIAS"
+    },
+    "table": {
+      "product": "Producto",
+      "machine": "Maquina",
+      "expiry": "Fecha Expiracion",
+      "remove": "Remover",
+      "emptySection": "No hay items en esta seccion."
+    }
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "markAllRead": "Marcar todas como leidas",
+    "empty": "No hay alertas"
+  },
+  "help": {
+    "title": "Ayuda",
+    "description": "Necesitas soporte? Contacta operaciones o revisa runbooks."
+  },
+  "modules": {
+    "comingSoon": "Modulo en desarrollo."
+  },
+  "machines": {
+    "title": "Maquinas",
+    "subtitle": "Monitorea y administra tu registro de maquinas",
+    "mapView": "Vista de Mapa",
+    "addMachine": "Agregar Maquina",
+    "searchPlaceholder": "Busca por nombre, MID o ubicacion",
+    "statusAll": "Todos los estados",
+    "statusOnline": "En linea",
+    "statusOffline": "Fuera de linea",
+    "statusWarning": "Advertencia",
+    "statusError": "Error",
+    "typeAll": "Todos los tipos",
+    "typeFridge": "Refrigerador",
+    "typePantry": "Pantry",
+    "typeFreezer": "Congelador",
+    "sortProblems": "Problemas primero",
+    "sortName": "Nombre",
+    "sortRevenue": "Ingresos",
+    "revenue": "Ingresos",
+    "empty": "No hay maquinas para estos filtros.",
+    "tableName": "Nombre",
+    "tableType": "Tipo",
+    "tableStatus": "Estado",
+    "tableRevenue": "Ingresos",
+    "openMachine": "Abrir Maquina",
+    "mapMissingKey": "Falta la llave de Google Maps. Configura NEXT_PUBLIC_GOOGLE_MAPS_KEY.",
+    "loadingMap": "Cargando mapa..."
+  },
+  "machineForm": {
+    "createTitle": "Agregar Maquina",
+    "createSubtitle": "Registra una nueva maquina en tu flota",
+    "editTitle": "Editar Maquina",
+    "editSubtitle": "Actualiza los detalles de la maquina",
+    "name": "Nombre de Maquina",
+    "required": "Este campo es obligatorio",
+    "type": "Tipo",
+    "typeFridge": "Refrigerador",
+    "typePantry": "Pantry",
+    "typeFreezer": "Congelador",
+    "locationName": "Nombre de Ubicacion",
+    "address": "Direccion",
+    "addressPlaceholder": "Busca y selecciona una direccion",
+    "mapsKeyMissing": "La llave de Google Maps no esta configurada. Autocompletar direccion deshabilitado.",
+    "coordinates": "Coordenadas",
+    "override": "Sobrescribir",
+    "autoCoords": "Coordenadas automaticas",
+    "notes": "Notas",
+    "mid": "MID",
+    "midAuto": "Se genera automaticamente al guardar",
+    "cancel": "Cancelar",
+    "create": "Crear Maquina",
+    "save": "Guardar Cambios",
+    "saveError": "No se pudo guardar la maquina"
+  },
+  "machineDetail": {
+    "title": "Maquina {id}",
+    "description": "Detalle de maquina",
+    "lastSeen": "Ultima conexion",
+    "editMachine": "Editar Maquina",
+    "openQr": "Abrir QR",
+    "tabs": {
+      "overview": "Resumen",
+      "inventory": "Inventario",
+      "restock": "Reabastecer",
+      "transactions": "Transacciones",
+      "financials": "Finanzas",
+      "settings": "Configuracion"
+    },
+    "temperatureGauge": "Indicador de Temperatura",
+    "todayMetrics": "Metricas de Hoy",
+    "revenue": "Ingresos",
+    "transactions": "Transacciones",
+    "items": "Items Vendidos",
+    "commands": "Comandos",
+    "runDiagnostics": "Ejecutar Diagnostico",
+    "remoteLockdown": "Bloqueo Remoto (Stub)",
+    "recentAlerts": "Alertas Recientes",
+    "noRecentAlerts": "No hay alertas recientes para esta maquina.",
+    "phase2Placeholder": "Esta seccion se implementara en la Fase 2.",
+    "phase3Placeholder": "Esta seccion se implementara en la Fase 3."
+  },
+  "machineSettings": {
+    "displayName": "Nombre de Pantalla",
+    "required": "Este campo es obligatorio",
+    "preAuthAmount": "Monto de Preautorizacion ($)",
+    "taxRate": "Impuesto de Venta (%)",
+    "temperatureTarget": "Temperatura Objetivo",
+    "temperatureUnit": "Unidad de Temperatura",
+    "alertThreshold": "Umbral de Alerta",
+    "autoLockdown": "Bloqueo automatico por umbral",
+    "assignedDrivers": "Conductores Asignados",
+    "save": "Guardar Configuracion",
+    "saveError": "No se pudo guardar la configuracion",
+    "saveSuccess": "Configuracion de maquina actualizada"
+  },
+  "machineQr": {
+    "print": "Imprimir"
+  },
+  "restockPicklist": {
+    "title": "Lista de Surtido",
+    "subtitle": "Prepara una lista tactil antes de ir a la maquina.",
+    "machine": "Maquina",
+    "downloadPdf": "Descargar PDF",
+    "startRestock": "Iniciar Reabastecimiento",
+    "recommended": "Cantidades Recomendadas",
+    "totalBring": "Total a Llevar",
+    "product": "Producto",
+    "bring": "LLEVAR",
+    "current": "Actual",
+    "par": "Par",
+    "wasteRisk": "RIESGO DE MERMA",
+    "pdfTitle": "Lista de Surtido",
+    "empty": "No hay productos activos para esta maquina."
+  },
+  "restockSession": {
+    "title": "Sesion Movil de Reabastecimiento",
+    "machine": "Maquina",
+    "stepLabel": "Paso {step} de {total}",
+    "steps": {
+      "1": "Escanear Entrada",
+      "2": "Confirmar Conteos",
+      "3": "Registrar Remociones",
+      "4": "Completar"
+    },
+    "actions": {
+      "back": "Atras",
+      "next": "Siguiente",
+      "confirmCounts": "Confirmar Conteos",
+      "complete": "Completar Reabastecimiento",
+      "cancel": "Cancelar"
+    },
+    "scan": {
+      "title": "Paso 1 — Escanear Entrada",
+      "placeholder": "Escanear EPC / Scan EPC",
+      "hint": "Usa Enter del escaner para procesar cada EPC.",
+      "runningTally": "Conteo en curso",
+      "empty": "Sin escaneos en esta sesion.",
+      "success": "Agregado {epc}",
+      "duplicateInSession": "EPC ya escaneado en esta sesion.",
+      "alreadyInMachine": "El tag ya esta en esta maquina.",
+      "inOtherMachine": "El tag esta en la maquina: {machine}",
+      "unknownMachine": "Maquina desconocida",
+      "genericError": "No se pudo procesar el EPC.",
+      "assignUnknownTitle": "Asignar EPC Desconocido",
+      "assignUnknownBody": "Este EPC no existe en sistema. Asignalo ahora",
+      "assignProduct": "Producto",
+      "tagType": "Tipo de tag",
+      "assignAction": "Asignar a Producto",
+      "assignUnknownError": "No se pudo asignar el EPC.",
+      "assignedUnknownSuccess": "Asignado y escaneado {epc}"
+    },
+    "counts": {
+      "title": "Paso 2 — Confirmar Conteos",
+      "expected": "Sistema espera: {count}",
+      "skip": "Saltar Este Paso"
+    },
+    "removals": {
+      "title": "Paso 3 — Registrar Remociones",
+      "addButton": "Agregar Remocion",
+      "modalTitle": "Remover Item",
+      "mode": "Tipo de remocion",
+      "productMode": "Producto + Cantidad",
+      "product": "Producto",
+      "quantity": "Cantidad",
+      "reason": "Motivo",
+      "otherReason": "Otro motivo",
+      "confirm": "Confirmar Remocion"
+    },
+    "complete": {
+      "title": "Paso 4 — Completar",
+      "added": "Agregados",
+      "removed": "Removidos",
+      "discrepancies": "Discrepancias",
+      "belowPar": "Productos por debajo del par",
+      "noBelowPar": "Todos los productos cumplen nivel par.",
+      "notes": "Notas de sesion",
+      "takePhoto": "Tomar Foto",
+      "error": "No se pudo completar la sesion."
+    },
+    "reasons": {
+      "expired": "Expirado",
+      "damaged": "Danado",
+      "quality_issue": "Problema de Calidad",
+      "other": "Otro"
+    }
+  },
+  "stockingActivity": {
+    "table": {
+      "date": "Fecha",
+      "machine": "Maquina",
+      "operator": "Operador",
+      "added": "Agregados",
+      "removed": "Removidos",
+      "photos": "Fotos",
+      "details": "Detalles",
+      "open": "Detalles"
+    },
+    "empty": "No hay sesiones de reabastecimiento con estos filtros.",
+    "drawer": {
+      "title": "Detalle de Sesion",
+      "machine": "Maquina",
+      "started": "Inicio",
+      "completed": "Completado",
+      "discrepancies": "Discrepancias",
+      "addedItems": "Items agregados",
+      "removedItems": "Items removidos",
+      "counts": "Conteos fisicos",
+      "expected": "Esperado",
+      "counted": "Contado",
+      "notes": "Notas",
+      "photos": "Fotos",
+      "emptyAdded": "Sin items agregados",
+      "emptyRemoved": "Sin items removidos",
+      "emptyCounts": "Sin confirmacion de conteos",
+      "emptyPhotos": "Sin fotos"
+    },
+    "countStatus": {
+      "matches_expected": "Coincide con esperado",
+      "correction": "Correccion",
+      "unconfirmed": "Sin confirmar"
+    },
+    "reasons": {
+      "expired": "Expirado",
+      "damaged": "Danado",
+      "quality_issue": "Problema de Calidad",
+      "other": "Otro"
+    },
+    "transfer": {
+      "button": "Transferir",
+      "title": "Transferir Item",
+      "toMachine": "Maquina destino",
+      "cancel": "Cancelar",
+      "confirm": "Confirmar Transferencia",
+      "success": "Item transferido.",
+      "error": "No se pudo transferir el item."
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Login Operador",
+      "email": "Correo",
+      "password": "Contrasena",
+      "forgot": "Olvidaste tu contrasena?",
+      "submit": "Entrar",
+      "invalidCredentials": "Credenciales incorrectas / Invalid credentials"
+    },
+    "forgotPassword": {
+      "title": "Restablecer contrasena",
+      "email": "Correo",
+      "submit": "Enviar enlace",
+      "success": "Revisa tu correo"
+    },
+    "resetPassword": {
+      "title": "Nueva contrasena",
+      "newPassword": "Nueva contrasena",
+      "confirmPassword": "Confirmar contrasena",
+      "submit": "Actualizar contrasena"
+    }
+  },
+  "common": {
+    "since": "hace",
+    "justNow": "ahora"
+  }
+}

@@ -1,0 +1,611 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "machines": "Machines",
+    "products": "Products",
+    "inventory": "Inventory",
+    "restock": "Restock",
+    "transactions": "Transactions",
+    "financials": "Financials",
+    "discounts": "Discounts",
+    "analytics": "Analytics",
+    "settings": "Settings",
+    "help": "Help"
+  },
+  "topbar": {
+    "operator": "Operator",
+    "language": "Language",
+    "mobileMenu": "Open menu"
+  },
+  "status": {
+    "online": "Online",
+    "offline": "Offline",
+    "warning": "Warning",
+    "error": "Error",
+    "unknown": "Unknown",
+    "live": "LIVE"
+  },
+  "dashboard": {
+    "homeTitle": "Home Dashboard",
+    "fleet": {
+      "title": "Fleet Health",
+      "total": "Total",
+      "online": "Online",
+      "offline": "Offline",
+      "warnings": "Warnings"
+    },
+    "alerts": {
+      "title": "Critical Alerts",
+      "allGood": "All machines operating normally",
+      "goToMachine": "Go to Machine",
+      "offline": "OFFLINE",
+      "tooWarm": "TOO_WARM",
+      "rfidError": "RFID_ERROR",
+      "lowStock": "LOW_STOCK"
+    },
+    "metrics": {
+      "title": "Today's Metrics",
+      "revenue": "Revenue",
+      "transactions": "Transactions",
+      "items": "Items Sold"
+    },
+    "machinesGrid": {
+      "title": "Machine Cards",
+      "location": "Location",
+      "temperature": "Temp",
+      "todayRevenue": "Today Revenue",
+      "goToMachine": "Open"
+    }
+  },
+  "productCatalog": {
+    "title": "Product Catalog",
+    "subtitle": "Manage products, categories, and pricing across your machines",
+    "importCsv": "Import CSV",
+    "addProduct": "Add Product",
+    "searchPlaceholder": "Search by name or SKU",
+    "categoryAll": "All categories",
+    "statusAll": "All statuses",
+    "statusActive": "Active",
+    "statusArchived": "Archived",
+    "tablePhoto": "Photo",
+    "tableName": "Name",
+    "tableCategory": "Category",
+    "tablePrice": "Base Price",
+    "tableStatus": "Status",
+    "empty": "No products found for current filters."
+  },
+  "productEditor": {
+    "createTitle": "Add Product",
+    "createSubtitle": "Create a new catalog product",
+    "editTitle": "Edit Product",
+    "editSubtitle": "Update product details, nutrition, and machine pricing",
+    "back": "Back",
+    "archive": "Archive Product",
+    "tabs": {
+      "basic": "Basic Info",
+      "nutrition": "Nutritional Info",
+      "pricing": "Machine Pricing"
+    },
+    "name": "Name",
+    "required": "This field is required",
+    "sku": "SKU",
+    "skuPlaceholder": "Auto-generate if left blank",
+    "category": "Category",
+    "categoryNone": "No category",
+    "addCategory": "Add category",
+    "newCategoryName": "New category name",
+    "createCategory": "Create",
+    "categoryCreateNameRequired": "Category name is required",
+    "categoryCreateError": "Unable to create category",
+    "categoryCreateSuccess": "Category created",
+    "basePrice": "Base Price",
+    "priceInvalid": "Enter a price greater than 0",
+    "description": "Description",
+    "photo": "Photo",
+    "photoHint": "Drag and drop an image, or click to upload",
+    "servingSize": "Serving Size",
+    "calories": "Calories",
+    "totalFat": "Total Fat (g)",
+    "saturatedFat": "Saturated Fat (g)",
+    "sodium": "Sodium (mg)",
+    "totalCarbs": "Total Carbs (g)",
+    "fiber": "Fiber (g)",
+    "sugars": "Sugars (g)",
+    "protein": "Protein (g)",
+    "allergens": "Allergens",
+    "allergenLabels": {
+      "gluten": "Gluten",
+      "dairy": "Dairy",
+      "nuts": "Nuts",
+      "soy": "Soy",
+      "eggs": "Eggs",
+      "fish": "Fish",
+      "shellfish": "Shellfish",
+      "sesame": "Sesame"
+    },
+    "pricingHint": "Leave machine price empty to inherit base price.",
+    "pricingMachine": "Machine",
+    "pricingOverride": "Price Override",
+    "save": "Save Product",
+    "saveError": "Unable to save product",
+    "saveSuccess": "Product saved successfully",
+    "photoUploadError": "Photo upload failed",
+    "photoSaveError": "Unable to save photo URL",
+    "archiveConfirm": "Archive this product?",
+    "archiveError": "Unable to archive product"
+  },
+  "productImport": {
+    "title": "Bulk Import Products",
+    "subtitle": "Upload products from a CSV file",
+    "step1": "Step 1 - Download template",
+    "step2": "Step 2 - Upload CSV",
+    "step3": "Step 3 - Preview and validate",
+    "step4": "Step 4 - Import valid rows",
+    "downloadTemplate": "Download Template",
+    "uploadCsv": "Select CSV file",
+    "validCount": "{count} valid",
+    "invalidCount": "{count} invalid",
+    "headers": {
+      "name": "Name",
+      "category": "Category",
+      "price": "Price",
+      "error": "Validation"
+    },
+    "empty": "Upload a CSV file to preview rows.",
+    "importButton": "Import {count} Valid Products",
+    "downloadSkipped": "Download Skipped Rows CSV",
+    "importResult": "{imported} products imported, {skipped} skipped",
+    "importError": "Import failed",
+    "errors": {
+      "missingName": "Missing required name",
+      "invalidPrice": "Price must be a number greater than 0"
+    }
+  },
+  "inventoryTags": {
+    "title": "RFID Tag Management",
+    "subtitle": "Assign EPCs, order tags, verify machine inventory, and resolve detached stickers",
+    "tabs": {
+      "assign": "Assign EPCs",
+      "order": "Order Tags",
+      "orders": "Tag Orders",
+      "verify": "Verify Inventory"
+    },
+    "readOnlyMessage": "Your role has read-only access for inventory. Contact an admin to modify RFID records.",
+    "common": {
+      "cancel": "Cancel"
+    },
+    "assign": {
+      "step1Title": "Step 1 - Select Product",
+      "productSearch": "Search products...",
+      "step2Title": "Step 2 - Select Tag Type",
+      "step3Title": "Step 3 - Expiration Date",
+      "expirationHint": "Last used expiration is remembered per product.",
+      "productPreview": "Product Confirmation",
+      "readyToScan": "Ready for scan loop",
+      "noProductSelected": "Select a product to begin scanning.",
+      "step4Title": "Step 4 - Scan Loop",
+      "scanPlaceholder": "Scan EPC or type manually",
+      "selectProductFirst": "Select a product before scanning EPCs.",
+      "scanSuccess": "Assigned {epc}",
+      "scanError": "Failed to assign EPC",
+      "inMachine": "Tag already in machine.",
+      "inMachineWithName": "Tag already in machine: {machine}",
+      "doneScanning": "Done Scanning",
+      "resumeScanning": "Resume Scanning",
+      "runningTally": "Running tally",
+      "noSessionScans": "No tags assigned in this session yet.",
+      "totalAssigned": "Total assigned",
+      "latestScans": "Latest scans",
+      "noLatestScans": "No recent scans.",
+      "sessionSummaryTitle": "Session Summary",
+      "sessionSummaryBody": "{count} tags assigned in this session.",
+      "processing": "Processing scan...",
+      "repurposeTitle": "Repurpose Tag",
+      "repurposeBody": "This tag was last used for {product}. Reassign it now?",
+      "repurposeAction": "Repurpose Tag",
+      "repurposeError": "Failed to repurpose tag",
+      "repurposeSuccess": "Repurposed {epc}",
+      "unknownProduct": "Unknown product"
+    },
+    "detached": {
+      "title": "Detached Sticker Workflow",
+      "lookupPlaceholder": "Scan or type EPC",
+      "lookup": "Lookup",
+      "lookupError": "Unable to find EPC",
+      "lastMachine": "Last known machine",
+      "currentStatus": "Current status",
+      "optionSame": "Reattach to same product",
+      "optionDifferent": "Reattach to different product",
+      "optionLost": "Mark as lost",
+      "selectProduct": "Select new product",
+      "apply": "Apply Resolution",
+      "resolveError": "Failed to apply detached sticker action",
+      "resolveSuccess": "Detached sticker action applied"
+    },
+    "order": {
+      "title": "Order RFID Tags",
+      "tagType": "Tag Type",
+      "quantity": "Quantity",
+      "notes": "Notes",
+      "submit": "Place Tag Order",
+      "submitError": "Failed to submit tag order",
+      "submitSuccessEmail": "Tag order submitted. Confirmation email sent.",
+      "submitSuccessNoEmail": "Tag order submitted. Email confirmation was not sent.",
+      "address": {
+        "line1": "Address Line 1",
+        "line2": "Address Line 2",
+        "city": "City",
+        "state": "State",
+        "postalCode": "Postal Code",
+        "country": "Country",
+        "contactName": "Contact Name",
+        "phone": "Phone"
+      }
+    },
+    "orders": {
+      "title": "Tag Orders",
+      "id": "Order ID",
+      "type": "Tag Type",
+      "quantity": "Quantity",
+      "status": "Status",
+      "created": "Created",
+      "empty": "No tag orders yet."
+    },
+    "verify": {
+      "title": "Verify Machine Inventory",
+      "machine": "Machine",
+      "scanned": "Scanned EPCs",
+      "placeholder": "One EPC per line",
+      "compare": "Compare",
+      "compareError": "Failed to compare inventory",
+      "compareSuccess": "Comparison completed.",
+      "summary": "Expected: {expected} | Scanned: {scanned} | Missing: {missing} | Unexpected: {unexpected}",
+      "missing": "Missing",
+      "unexpected": "Unexpected",
+      "none": "None",
+      "markLost": "Mark Lost",
+      "register": "Register",
+      "markLostError": "Failed to mark EPC as lost",
+      "registerError": "Failed to register EPC"
+    }
+  },
+  "inventoryDashboard": {
+    "title": "Inventory Dashboard",
+    "subtitle": "Real-time visibility across machine inventory, expiration risk, and par-level stock health",
+    "actions": {
+      "expirationReport": "Expiration Report",
+      "manageTags": "Manage Tags",
+      "activityLog": "Stocking Activity"
+    },
+    "summary": {
+      "title": "Live Inventory Summary",
+      "totalItems": "Total Items In Machines",
+      "expiringSoon": "Expiring Soon (<72h)",
+      "expired": "Expired",
+      "lowStock": "Low Stock",
+      "offline": "OFFLINE",
+      "lastUpdated": "Last updated {minutes} min ago",
+      "refresh": "Refresh"
+    },
+    "table": {
+      "title": "Machine Inventory",
+      "machineName": "Machine Name",
+      "machineStatus": "Status",
+      "totalItems": "Total Items",
+      "expiring": "Expiring",
+      "expired": "Expired",
+      "lowStock": "Low Stock",
+      "product": "Product",
+      "count": "Count",
+      "parLevel": "Par Level",
+      "nextExpiry": "Next Expiry",
+      "productStatus": "Status",
+      "quickActions": "Quick Actions",
+      "setParLevel": "Set Par Level",
+      "saveParLevel": "Save Par Level",
+      "parInvalid": "Par level must be 0 or greater",
+      "parSaveError": "Failed to save par level",
+      "parSaveSuccess": "Par level updated",
+      "noProductsForMachine": "No product rows for this machine yet.",
+      "statusStocked": "STOCKED",
+      "statusLow": "LOW",
+      "statusOut": "OUT",
+      "statusExpiring": "EXPIRING"
+    }
+  },
+  "inventoryExpiration": {
+    "title": "Expiration Report",
+    "subtitle": "Items currently in machines grouped by expiration window",
+    "backToInventory": "Back to Inventory",
+    "removeSuccess": "Item removed from machine inventory",
+    "removeError": "Failed to remove item",
+    "sections": {
+      "expired": "EXPIRED",
+      "today": "TODAY",
+      "oneToThree": "1-3 DAYS",
+      "fourToSeven": "4-7 DAYS"
+    },
+    "table": {
+      "product": "Product",
+      "machine": "Machine",
+      "expiry": "Expiry Date",
+      "remove": "Remove",
+      "emptySection": "No items in this section."
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all read",
+    "empty": "No alerts yet"
+  },
+  "help": {
+    "title": "Help",
+    "description": "Need support? Contact operations or review runbooks."
+  },
+  "modules": {
+    "comingSoon": "Module coming next."
+  },
+  "machines": {
+    "title": "Machines",
+    "subtitle": "Monitor and manage your fleet registry",
+    "mapView": "Map View",
+    "addMachine": "Add Machine",
+    "searchPlaceholder": "Search by name, MID, or location",
+    "statusAll": "All statuses",
+    "statusOnline": "Online",
+    "statusOffline": "Offline",
+    "statusWarning": "Warning",
+    "statusError": "Error",
+    "typeAll": "All types",
+    "typeFridge": "Fridge",
+    "typePantry": "Pantry",
+    "typeFreezer": "Freezer",
+    "sortProblems": "Problems first",
+    "sortName": "Name",
+    "sortRevenue": "Revenue",
+    "revenue": "Revenue",
+    "empty": "No machines found for these filters.",
+    "tableName": "Name",
+    "tableType": "Type",
+    "tableStatus": "Status",
+    "tableRevenue": "Revenue",
+    "openMachine": "Open Machine",
+    "mapMissingKey": "Google Maps key is missing. Set NEXT_PUBLIC_GOOGLE_MAPS_KEY.",
+    "loadingMap": "Loading map..."
+  },
+  "machineForm": {
+    "createTitle": "Add Machine",
+    "createSubtitle": "Register a new machine in your fleet",
+    "editTitle": "Edit Machine",
+    "editSubtitle": "Update machine details",
+    "name": "Machine Name",
+    "required": "This field is required",
+    "type": "Type",
+    "typeFridge": "Fridge",
+    "typePantry": "Pantry",
+    "typeFreezer": "Freezer",
+    "locationName": "Location Name",
+    "address": "Address",
+    "addressPlaceholder": "Search and select an address",
+    "mapsKeyMissing": "Google Maps key is not configured. Address autocomplete is disabled.",
+    "coordinates": "Coordinates",
+    "override": "Override",
+    "autoCoords": "Auto-filled coordinates",
+    "notes": "Notes",
+    "mid": "MID",
+    "midAuto": "Auto-generated on save",
+    "cancel": "Cancel",
+    "create": "Create Machine",
+    "save": "Save Changes",
+    "saveError": "Unable to save machine"
+  },
+  "machineDetail": {
+    "title": "Machine {id}",
+    "description": "Machine detail",
+    "lastSeen": "Last seen",
+    "editMachine": "Edit Machine",
+    "openQr": "Open QR",
+    "tabs": {
+      "overview": "Overview",
+      "inventory": "Inventory",
+      "restock": "Restock",
+      "transactions": "Transactions",
+      "financials": "Financials",
+      "settings": "Settings"
+    },
+    "temperatureGauge": "Temperature Gauge",
+    "todayMetrics": "Today's Metrics",
+    "revenue": "Revenue",
+    "transactions": "Transactions",
+    "items": "Items Sold",
+    "commands": "Commands",
+    "runDiagnostics": "Run Diagnostics",
+    "remoteLockdown": "Remote Lockdown (Stub)",
+    "recentAlerts": "Recent Alerts",
+    "noRecentAlerts": "No recent alerts for this machine.",
+    "phase2Placeholder": "This section will be implemented in Phase 2.",
+    "phase3Placeholder": "This section will be implemented in Phase 3."
+  },
+  "machineSettings": {
+    "displayName": "Display Name",
+    "required": "This field is required",
+    "preAuthAmount": "Pre-auth Amount ($)",
+    "taxRate": "Sales Tax Rate (%)",
+    "temperatureTarget": "Temperature Target",
+    "temperatureUnit": "Temperature Unit",
+    "alertThreshold": "Alert Threshold",
+    "autoLockdown": "Auto-lockdown on breach",
+    "assignedDrivers": "Assigned Drivers",
+    "save": "Save Settings",
+    "saveError": "Unable to save settings",
+    "saveSuccess": "Machine settings updated"
+  },
+  "machineQr": {
+    "print": "Print"
+  },
+  "restockPicklist": {
+    "title": "Restock Pick List",
+    "subtitle": "Build a touch-first pick list before heading to the machine.",
+    "machine": "Machine",
+    "downloadPdf": "Download PDF",
+    "startRestock": "Start Restock",
+    "recommended": "Recommended Quantities",
+    "totalBring": "Total Bring",
+    "product": "Product",
+    "bring": "BRING",
+    "current": "Currently",
+    "par": "Par",
+    "wasteRisk": "WASTE RISK",
+    "pdfTitle": "Restock Pick List",
+    "empty": "No active products found for this machine."
+  },
+  "restockSession": {
+    "title": "Mobile Restock Session",
+    "machine": "Machine",
+    "stepLabel": "Step {step} of {total}",
+    "steps": {
+      "1": "Scan Items In",
+      "2": "Confirm Counts",
+      "3": "Log Removals",
+      "4": "Complete"
+    },
+    "actions": {
+      "back": "Back",
+      "next": "Next",
+      "confirmCounts": "Confirm Counts",
+      "complete": "Complete Restock",
+      "cancel": "Cancel"
+    },
+    "scan": {
+      "title": "Step 1 — Scan Items In",
+      "placeholder": "Escanear EPC / Scan EPC",
+      "hint": "Use scanner Enter key to process each EPC.",
+      "runningTally": "Running tally",
+      "empty": "No scans in this session yet.",
+      "success": "Added {epc}",
+      "duplicateInSession": "EPC already scanned in this session.",
+      "alreadyInMachine": "Tag already in this machine.",
+      "inOtherMachine": "Tag is currently in machine: {machine}",
+      "unknownMachine": "Unknown machine",
+      "genericError": "Unable to process EPC.",
+      "assignUnknownTitle": "Assign Unknown EPC",
+      "assignUnknownBody": "This EPC was not found. Assign it now",
+      "assignProduct": "Product",
+      "tagType": "Tag type",
+      "assignAction": "Assign to Product",
+      "assignUnknownError": "Unable to assign EPC.",
+      "assignedUnknownSuccess": "Assigned and scanned {epc}"
+    },
+    "counts": {
+      "title": "Step 2 — Confirm Counts",
+      "expected": "System expects: {count}",
+      "skip": "Skip This Step"
+    },
+    "removals": {
+      "title": "Step 3 — Log Removals",
+      "addButton": "Add Remove Item",
+      "modalTitle": "Remove Item",
+      "mode": "Removal type",
+      "productMode": "Product + Qty",
+      "product": "Product",
+      "quantity": "Quantity",
+      "reason": "Reason",
+      "otherReason": "Other reason",
+      "confirm": "Confirm Removal"
+    },
+    "complete": {
+      "title": "Step 4 — Complete",
+      "added": "Added",
+      "removed": "Removed",
+      "discrepancies": "Discrepancies",
+      "belowPar": "Products still below par",
+      "noBelowPar": "All products meet par levels.",
+      "notes": "Session notes",
+      "takePhoto": "Take Photo",
+      "error": "Failed to complete restock session."
+    },
+    "reasons": {
+      "expired": "Expired",
+      "damaged": "Damaged",
+      "quality_issue": "Quality Issue",
+      "other": "Other"
+    }
+  },
+  "stockingActivity": {
+    "table": {
+      "date": "Date",
+      "machine": "Machine",
+      "operator": "Operator",
+      "added": "Added",
+      "removed": "Removed",
+      "photos": "Photos",
+      "details": "Details",
+      "open": "Details"
+    },
+    "empty": "No restock sessions found for current filters.",
+    "drawer": {
+      "title": "Session Details",
+      "machine": "Machine",
+      "started": "Started",
+      "completed": "Completed",
+      "discrepancies": "Discrepancies",
+      "addedItems": "Added items",
+      "removedItems": "Removed items",
+      "counts": "Physical counts",
+      "expected": "Expected",
+      "counted": "Counted",
+      "notes": "Notes",
+      "photos": "Photos",
+      "emptyAdded": "No added items",
+      "emptyRemoved": "No removed items",
+      "emptyCounts": "No count confirmations",
+      "emptyPhotos": "No photos"
+    },
+    "countStatus": {
+      "matches_expected": "Matches expected",
+      "correction": "Correction",
+      "unconfirmed": "Unconfirmed"
+    },
+    "reasons": {
+      "expired": "Expired",
+      "damaged": "Damaged",
+      "quality_issue": "Quality Issue",
+      "other": "Other"
+    },
+    "transfer": {
+      "button": "Transfer",
+      "title": "Transfer Item",
+      "toMachine": "Destination machine",
+      "cancel": "Cancel",
+      "confirm": "Confirm Transfer",
+      "success": "Item transferred.",
+      "error": "Failed to transfer item."
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Operator Login",
+      "email": "Email address",
+      "password": "Password",
+      "forgot": "Forgot password?",
+      "submit": "Sign in",
+      "invalidCredentials": "Credenciales incorrectas / Invalid credentials"
+    },
+    "forgotPassword": {
+      "title": "Reset Password",
+      "email": "Email address",
+      "submit": "Send reset link",
+      "success": "Check your email"
+    },
+    "resetPassword": {
+      "title": "Set new password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password",
+      "submit": "Update password"
+    }
+  },
+  "common": {
+    "since": "ago",
+    "justNow": "just now"
+  }
+}

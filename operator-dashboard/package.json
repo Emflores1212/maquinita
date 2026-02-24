@@ -1,0 +1,50 @@
+{
+  "name": "operator-dashboard",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "supabase:types": "supabase gen types typescript --project-id $SUPABASE_PROJECT_ID > lib/types/database.ts"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^3.10.0",
+    "@radix-ui/react-popover": "^1.1.15",
+    "@radix-ui/react-tabs": "^1.1.2",
+    "@react-google-maps/api": "^2.20.3",
+    "@supabase/ssr": "^0.5.2",
+    "@supabase/supabase-js": "^2.57.4",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.34.3",
+    "lucide-react": "^0.575.0",
+    "nanoid": "^5.1.5",
+    "next": "14.2.0",
+    "next-intl": "^3.26.3",
+    "papaparse": "^5.5.3",
+    "qrcode.react": "^4.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.54.2",
+    "react-is": "^19.2.4",
+    "recharts": "^3.7.0",
+    "tailwind-merge": "^2.5.5",
+    "tailwindcss": "^4.2.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.0",
+    "@types/google.maps": "^3.58.1",
+    "@types/node": "^24.10.1",
+    "@types/papaparse": "^5.5.2",
+    "@types/react": "^18.2.48",
+    "@types/react-dom": "^18.2.18",
+    "@types/recharts": "^1.8.29",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^14.2.0",
+    "postcss": "^8.5.6",
+    "typescript": "~5.9.3"
+  }
+}

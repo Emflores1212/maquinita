@@ -1,0 +1,4 @@
+RPi.GPIO==0.7.1
+pyserial==3.5
+opencv-python
+ultralytics
