@@ -28,6 +28,21 @@ const settingsInputSchema = z.object({
   alertThreshold: z.number(),
   autoLockdown: z.boolean(),
   assignedDriverIds: z.array(z.string().uuid()),
+  alertPreferences: z.array(
+    z.object({
+      userId: z.string().uuid(),
+      alertType: z.enum(['OFFLINE', 'TOO_WARM', 'RFID_ERROR', 'LOW_STOCK']),
+      emailEnabled: z.boolean(),
+      smsEnabled: z.boolean(),
+      pushEnabled: z.boolean(),
+      delayMinutes: z.number().int().min(0).max(120),
+    })
+  ),
+});
+
+const resolveMachineAlertSchema = z.object({
+  machineId: z.string().uuid(),
+  alertId: z.string().uuid(),
 });
 
 type ActionResult = {
@@ -313,6 +328,27 @@ export async function updateMachineSettingsAction(payload: z.infer<typeof settin
     }
   }
 
+  const normalizedPreferences = parsed.data.alertPreferences.map((preference) => ({
+    operator_id: ctx.profile.operator_id,
+    machine_id: parsed.data.machineId,
+    user_id: preference.userId,
+    alert_type: preference.alertType,
+    email_enabled: preference.emailEnabled,
+    sms_enabled: preference.smsEnabled,
+    push_enabled: preference.pushEnabled,
+    delay_minutes: preference.delayMinutes,
+  }));
+
+  await adminClient
+    .from('machine_alert_preferences')
+    .delete()
+    .eq('operator_id', ctx.profile.operator_id)
+    .eq('machine_id', parsed.data.machineId);
+
+  if (normalizedPreferences.length > 0) {
+    await adminClient.from('machine_alert_preferences').insert(normalizedPreferences);
+  }
+
   await adminClient.from('audit_log').insert({
     operator_id: ctx.profile.operator_id,
     user_id: ctx.user.id,
@@ -325,9 +361,88 @@ export async function updateMachineSettingsAction(payload: z.infer<typeof settin
     },
   });
 
+  await adminClient.from('audit_log').insert({
+    operator_id: ctx.profile.operator_id,
+    user_id: ctx.user.id,
+    action: 'machine.alert_preferences.updated',
+    entity_type: 'machines',
+    entity_id: parsed.data.machineId,
+    payload: {
+      preferencesCount: normalizedPreferences.length,
+    },
+  });
+
   revalidatePath(`/machines/${parsed.data.machineId}`);
   revalidatePath('/machines');
   revalidatePath('/dashboard');
 
   return { ok: true, id: parsed.data.machineId };
+}
+
+export async function resolveMachineAlertAction(payload: z.infer<typeof resolveMachineAlertSchema>): Promise<ActionResult> {
+  const parsed = resolveMachineAlertSchema.safeParse(payload);
+  if (!parsed.success) {
+    return { ok: false, error: 'Invalid alert resolve payload' };
+  }
+
+  const ctx = await getOperatorContext();
+  if ('error' in ctx) {
+    return { ok: false, error: ctx.error };
+  }
+
+  if (!hasPermission(ctx.profile.role, 'machines', 'w')) {
+    return { ok: false, error: 'Permission denied' };
+  }
+
+  const adminClient = createAdminClient() as any;
+
+  const { data: alertData } = await adminClient
+    .from('alerts')
+    .select('id, type')
+    .eq('id', parsed.data.alertId)
+    .eq('machine_id', parsed.data.machineId)
+    .eq('operator_id', ctx.profile.operator_id)
+    .is('resolved_at', null)
+    .maybeSingle();
+
+  if (!alertData?.id) {
+    return { ok: false, error: 'Alert not found' };
+  }
+
+  const { error: updateError } = await adminClient
+    .from('alerts')
+    .update({
+      resolved_at: new Date().toISOString(),
+      resolved_by: ctx.user.id,
+    })
+    .eq('id', parsed.data.alertId)
+    .eq('operator_id', ctx.profile.operator_id);
+
+  if (updateError) {
+    return { ok: false, error: 'Failed to resolve alert' };
+  }
+
+  await adminClient
+    .from('machine_alert_conditions')
+    .delete()
+    .eq('operator_id', ctx.profile.operator_id)
+    .eq('machine_id', parsed.data.machineId)
+    .eq('alert_type', String(alertData.type));
+
+  await adminClient.from('audit_log').insert({
+    operator_id: ctx.profile.operator_id,
+    user_id: ctx.user.id,
+    action: 'machine.alert.resolved',
+    entity_type: 'alerts',
+    entity_id: parsed.data.alertId,
+    payload: {
+      machine_id: parsed.data.machineId,
+      type: alertData.type,
+    },
+  });
+
+  revalidatePath(`/machines/${parsed.data.machineId}`);
+  revalidatePath('/dashboard');
+
+  return { ok: true, id: parsed.data.alertId };
 }

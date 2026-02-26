@@ -38,6 +38,44 @@ export type DriverProfile = {
   assigned_machine_ids: string[] | null;
 };
 
+export type TeamMemberProfile = {
+  id: string;
+  full_name: string | null;
+  role: 'admin' | 'manager' | 'driver' | 'viewer' | null;
+  assigned_machine_ids: string[] | null;
+};
+
+export type MachineAlertPreference = {
+  id: string;
+  machine_id: string;
+  user_id: string;
+  alert_type: 'OFFLINE' | 'TOO_WARM' | 'RFID_ERROR' | 'LOW_STOCK';
+  email_enabled: boolean;
+  sms_enabled: boolean;
+  push_enabled: boolean;
+  delay_minutes: number;
+};
+
+export type TemperatureReadingPoint = {
+  id: string;
+  temperature: number;
+  recorded_at: string | null;
+};
+
+export type MachineCommandHistoryItem = {
+  id: string;
+  machine_id: string;
+  issued_by: string | null;
+  type: 'LOCKDOWN' | 'UNLOCK' | 'REBOOT' | 'TEMP_ADJUST';
+  status: 'pending' | 'acknowledged' | 'executed' | 'failed';
+  issued_at: string;
+  acknowledged_at: string | null;
+  executed_at: string | null;
+  error_message: string | null;
+  payload: Record<string, unknown> | null;
+  issued_by_name?: string | null;
+};
+
 export type MachineAlert = {
   id: string;
   type: string;
@@ -45,4 +83,5 @@ export type MachineAlert = {
   severity: string | null;
   created_at: string | null;
   resolved_at: string | null;
+  resolved_by: string | null;
 };

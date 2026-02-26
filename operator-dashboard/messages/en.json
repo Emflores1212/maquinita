@@ -10,7 +10,8 @@
     "discounts": "Discounts",
     "analytics": "Analytics",
     "settings": "Settings",
-    "help": "Help"
+    "help": "Help",
+    "marketing": "Marketing"
   },
   "topbar": {
     "operator": "Operator",
@@ -336,7 +337,17 @@
   "notifications": {
     "title": "Notifications",
     "markAllRead": "Mark all read",
-    "empty": "No alerts yet"
+    "empty": "No alerts yet",
+    "offlineSyncToast": "Offline transactions synced.",
+    "banner": {
+      "title": "Enable push alerts",
+      "description": "Receive real-time critical machine notifications on this device.",
+      "action": "Enable Notifications",
+      "enabling": "Enabling...",
+      "permissionDenied": "Notification permission was not granted.",
+      "missingKey": "Missing NEXT_PUBLIC_VAPID_PUBLIC_KEY in environment.",
+      "subscribeError": "Unable to enable push notifications."
+    }
   },
   "help": {
     "title": "Help",
@@ -411,6 +422,7 @@
       "restock": "Restock",
       "transactions": "Transactions",
       "financials": "Financials",
+      "alerts": "Alerts",
       "settings": "Settings"
     },
     "temperatureGauge": "Temperature Gauge",
@@ -421,12 +433,88 @@
     "commands": "Commands",
     "runDiagnostics": "Run Diagnostics",
     "remoteLockdown": "Remote Lockdown (Stub)",
+    "connectivity": {
+      "title": "Connectivity",
+      "ethernet": "Ethernet",
+      "wifi": "Wi-Fi",
+      "cellular": "Cellular",
+      "lastHeartbeat": "Last heartbeat",
+      "never": "Never",
+      "cellularBanner": "Running on cellular backup — check router"
+    },
+    "commandsPanel": {
+      "title": "Remote Commands",
+      "lockMachine": "Lock Machine",
+      "unlockMachine": "Unlock Machine",
+      "rebootMachine": "Reboot Machine",
+      "adjustTemp": "Adjust Temp",
+      "confirmLockTitle": "Lock this machine?",
+      "confirmLockBody": "The machine will reject new unlock flows until an unlock command is executed.",
+      "confirmUnlockTitle": "Unlock this machine?",
+      "confirmUnlockBody": "This enables normal customer access once the machine confirms execution.",
+      "confirmRebootTitle": "Reboot this machine?",
+      "confirmRebootBody": "Machine will go offline briefly during reboot.",
+      "confirmTempTitle": "Adjust target temperature?",
+      "tempRange": "Safe range: {min}°F to {max}°F",
+      "tempUnsupported": "Temperature adjustment is not supported for this machine type.",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "statusSending": "Sending...",
+      "statusAcknowledged": "Machine received...",
+      "statusExecuted": "Command executed",
+      "statusFailed": "Failed",
+      "feedback": {
+        "sending": "Sending command...",
+        "received": "Machine received command.",
+        "executed": "✓ Command executed",
+        "failed": "Command failed.",
+        "timeout": "Machine did not respond — check connectivity",
+        "issueError": "Unable to issue command"
+      }
+    },
+    "commandHistory": {
+      "title": "Command History",
+      "type": "Type",
+      "issuedBy": "Issued By",
+      "issuedAt": "Issued At",
+      "status": "Status",
+      "executedAt": "Executed At",
+      "empty": "No commands yet."
+    },
+    "errorGuide": {
+      "causes": "Likely causes",
+      "steps": "Recommended steps",
+      "contactSupport": "Contact Support",
+      "urgency": {
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low"
+      }
+    },
     "recentAlerts": "Recent Alerts",
     "noRecentAlerts": "No recent alerts for this machine.",
+    "alerts": {
+      "activeTitle": "Active Alerts",
+      "noneActive": "No active alerts right now.",
+      "resolve": "Resolve",
+      "resolveError": "Unable to resolve alert.",
+      "historyTitle": "Alert History",
+      "noneHistory": "No resolved alerts yet.",
+      "type": "Type",
+      "message": "Message",
+      "resolvedBy": "Resolved By",
+      "timeToResolve": "Time to Resolve",
+      "temperature24h": "Temperature (Last 24h)",
+      "noTemperatureData": "No temperature readings found for the last 24 hours."
+    },
     "phase2Placeholder": "This section will be implemented in Phase 2.",
     "phase3Placeholder": "This section will be implemented in Phase 3."
   },
   "machineSettings": {
+    "tabs": {
+      "general": "General",
+      "alerts": "Alerts"
+    },
     "displayName": "Display Name",
     "required": "This field is required",
     "preAuthAmount": "Pre-auth Amount ($)",
@@ -436,6 +524,20 @@
     "alertThreshold": "Alert Threshold",
     "autoLockdown": "Auto-lockdown on breach",
     "assignedDrivers": "Assigned Drivers",
+    "alerts": {
+      "delayLabel": "Alert delay",
+      "channels": {
+        "email": "Email",
+        "sms": "SMS",
+        "push": "Push"
+      },
+      "types": {
+        "OFFLINE": "Offline",
+        "TOO_WARM": "Too Warm",
+        "RFID_ERROR": "RFID Error",
+        "LOW_STOCK": "Low Stock"
+      }
+    },
     "save": "Save Settings",
     "saveError": "Unable to save settings",
     "saveSuccess": "Machine settings updated"
@@ -582,6 +684,454 @@
       "error": "Failed to transfer item."
     }
   },
+  "transactionsPage": {
+    "title": "Transactions",
+    "subtitle": "Search, filter, refund, and export machine transactions.",
+    "exportCsv": "Export CSV",
+    "copySuccess": "Copied to clipboard.",
+    "copyError": "Unable to copy value.",
+    "filters": {
+      "since": "Since",
+      "until": "Until",
+      "status": "Status",
+      "machines": "Machines",
+      "search": "Search",
+      "searchPlaceholder": "ID, Stripe ID, or customer email",
+      "apply": "Apply Filters",
+      "clear": "Clear"
+    },
+    "presets": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "last7": "Last 7D",
+      "last30": "Last 30D"
+    },
+    "status": {
+      "all": "All",
+      "completed": "Completed",
+      "pending": "Pending",
+      "refunded": "Refunded",
+      "failed": "Failed",
+      "synced": "Synced"
+    },
+    "summary": {
+      "revenue": "Total Revenue",
+      "count": "Total Transactions",
+      "avg": "Avg Value",
+      "refunded": "Total Refunded"
+    },
+    "table": {
+      "dateTime": "Date/Time",
+      "id": "ID",
+      "machine": "Machine",
+      "amount": "Amount",
+      "status": "Status",
+      "details": "Details",
+      "open": "Open"
+    },
+    "empty": "No transactions found for the current filters.",
+    "pagination": {
+      "label": "Page {page} of {totalPages} • {totalItems} total",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "details": {
+      "title": "Transaction Detail",
+      "id": "Transaction ID:",
+      "machine": "Machine:",
+      "dateTime": "Date/Time:",
+      "items": "Items",
+      "subtotal": "Subtotal",
+      "tax": "Tax ({rate}%)",
+      "discount": "Discount",
+      "refunded": "Refunded",
+      "total": "Total",
+      "payment": "Payment:",
+      "cardEnding": "Card ending in {last4}",
+      "timeline": "Status Timeline",
+      "viewRfid": "View RFID Data",
+      "hideRfid": "Hide RFID Data",
+      "noRfid": "No RFID EPC data available for this transaction.",
+      "issueRefund": "Issue Refund",
+      "resendReceipt": "Resend Receipt"
+    },
+    "refund": {
+      "title": "Issue Refund",
+      "available": "Available to refund",
+      "step1": "Step 1 — Refund type",
+      "step2": "Step 2 — Amount",
+      "step3": "Step 3 — Reason",
+      "step4": "Step 4 — Confirm",
+      "full": "Full Refund",
+      "partial": "Partial Refund",
+      "fullAuto": "Full refund will return all refundable balance.",
+      "customAmount": "Custom amount ($)",
+      "otherPlaceholder": "Add reason details",
+      "preview": "Refund {amount} to card ••••{last4}?",
+      "cancel": "Cancel",
+      "back": "Back",
+      "next": "Next",
+      "confirm": "Confirm Refund",
+      "invalidAmount": "Refund amount must be greater than zero.",
+      "exceeds": "Refund amount exceeds available refundable balance.",
+      "success": "Refund issued successfully for {amount}.",
+      "error": "Unable to process refund."
+    },
+    "reasons": {
+      "customer_complaint": "Customer Complaint",
+      "quality": "Quality",
+      "machine_error": "Machine Error",
+      "duplicate": "Duplicate",
+      "other": "Other"
+    },
+    "receipt": {
+      "success": "Receipt email sent.",
+      "error": "Unable to resend receipt."
+    }
+  },
+  "settingsPage": {
+    "receipts": {
+      "title": "Receipt Template",
+      "subtitle": "Customize branding for customer receipt emails.",
+      "readOnly": "You have read-only access. Contact an admin to edit receipt template settings.",
+      "logoUrl": "Logo URL",
+      "uploadLogo": "Upload Logo",
+      "uploading": "Uploading...",
+      "uploadSuccess": "Logo uploaded successfully.",
+      "primaryColor": "Primary Color",
+      "footerText": "Footer Text",
+      "supportEmail": "Support Email",
+      "supportPhone": "Support Phone",
+      "save": "Save Template",
+      "saveSuccess": "Receipt template saved.",
+      "previewTitle": "Live Preview",
+      "previewReceipt": "Transaction Receipt",
+      "previewBody": "This preview reflects your branding values before sending real receipts.",
+      "defaultFooter": "Thank you for your purchase with Maquinita.",
+      "supportLine": "Support: {email} • {phone}",
+      "errors": {
+        "invalidImage": "Please choose an image file.",
+        "logoTooLarge": "Logo file exceeds 5MB limit.",
+        "uploadFailed": "Logo upload failed.",
+        "saveFailed": "Failed to save receipt template."
+      }
+    },
+    "profitability": {
+      "title": "Profitability Settings",
+      "subtitle": "Set COGS percentages by category and product to power machine profitability analytics.",
+      "open": "Open Profitability Settings"
+    }
+  },
+  "financialsPage": {
+    "title": "Financials",
+    "subtitle": "Track revenue, fees, payouts, and tax reporting in one view.",
+    "links": {
+      "banking": "Banking",
+      "payouts": "Payouts"
+    },
+    "periodLabel": "Period",
+    "filters": {
+      "period": "Period",
+      "custom": "Custom",
+      "from": "From",
+      "to": "To",
+      "machine": "Machine",
+      "allMachines": "All machines",
+      "apply": "Apply Filters",
+      "reset": "Reset"
+    },
+    "kpis": {
+      "grossRevenue": "Gross Revenue",
+      "platformFees": "Platform Fees",
+      "stripeFees": "Stripe Processing Fees",
+      "netToOperator": "Net to Operator",
+      "noBaseline": "No baseline"
+    },
+    "chart": {
+      "title": "Revenue Trend",
+      "grossToggle": "Gross Revenue",
+      "netToggle": "Net to Operator"
+    },
+    "machineTable": {
+      "title": "Per-Machine Performance",
+      "exportCsv": "Export CSV",
+      "columns": {
+        "machine": "Machine",
+        "gross": "Gross",
+        "transactions": "Transactions",
+        "refunds": "Refunds",
+        "platformFee": "Platform Fee",
+        "net": "Net",
+        "percentOfTotal": "% of Total"
+      },
+      "empty": "No machine rows for this filter."
+    },
+    "fees": {
+      "title": "Your Maquinita Fees",
+      "saasFee": "SaaS fee: {amount}/month",
+      "txFee": "Transaction fee: {percent} + {fixed} per transaction",
+      "calculatorInput": "Sale amount",
+      "breakdown": "On a {sale} sale: Platform {platform} | Stripe {stripe} | You receive {net}"
+    },
+    "tax": {
+      "title": "Sales Tax Export",
+      "exportCsv": "Export CSV",
+      "exportPdf": "Download PDF",
+      "pdfTitle": "Sales Tax Report",
+      "generatedAt": "Generated",
+      "table": {
+        "machine": "Machine",
+        "grossSales": "Gross Sales",
+        "taxCollected": "Tax Collected",
+        "taxRate": "Tax Rate"
+      },
+      "totals": {
+        "gross": "Total Gross Sales",
+        "tax": "Total Tax Collected"
+      },
+      "empty": "No tax rows for this filter."
+    }
+  },
+  "bankingPage": {
+    "title": "Banking & Payout Schedule",
+    "subtitle": "Connect Stripe Express and manage payout timing.",
+    "status": {
+      "title": "Connect Status",
+      "unconnected": "Unconnected",
+      "pending": "Pending Verification",
+      "active": "Active",
+      "restricted": "Restricted",
+      "connectButton": "Connect Bank Account",
+      "accountId": "Stripe Account",
+      "bank": "Bank",
+      "last4": "Last4",
+      "accountType": "Account Type"
+    },
+    "schedule": {
+      "title": "Payout Schedule",
+      "nextPayout": "Next payout date",
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "weeklyDay": "Weekly payout day",
+      "monthlyDay": "Monthly payout day",
+      "save": "Save Schedule",
+      "saveSuccess": "Payout schedule saved. Next payout: {date}",
+      "saveError": "Failed to save payout schedule."
+    },
+    "messages": {
+      "connected": "Connect onboarding completed.",
+      "refresh": "Please continue onboarding to finish setup.",
+      "forbidden": "You do not have permission to connect this account.",
+      "error": "Unable to start Stripe Connect onboarding."
+    },
+    "days": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
+    }
+  },
+  "payoutsPage": {
+    "title": "Payout History",
+    "subtitle": "Review payouts and the transactions included in each transfer.",
+    "status": {
+      "scheduled": "Scheduled",
+      "inTransit": "In Transit",
+      "paid": "Paid",
+      "failed": "Failed"
+    },
+    "table": {
+      "date": "Date",
+      "period": "Period",
+      "gross": "Gross",
+      "fees": "Fees",
+      "refunds": "Refunds",
+      "netPaid": "Net Paid",
+      "status": "Status",
+      "transactions": "Transactions",
+      "openTransactions": "Transactions"
+    },
+    "modal": {
+      "title": "Payout Transactions",
+      "date": "Date:",
+      "period": "Period:",
+      "netPaid": "Net paid:",
+      "columns": {
+        "transactionId": "Transaction ID",
+        "machine": "Machine",
+        "gross": "Gross",
+        "fees": "Fees",
+        "refunds": "Refunds",
+        "net": "Net"
+      },
+      "empty": "No mapped transactions for this payout."
+    },
+    "empty": "No payouts found yet."
+  },
+  "discountsPage": {
+    "title": "Discounts Engine",
+    "subtitle": "Create and manage discount campaigns."
+  },
+  "discountDialog": {
+    "newTitle": "New Discount",
+    "editTitle": "Edit Discount",
+    "activate": "Activate",
+    "save": "Save"
+  },
+  "expirationRules": {
+    "title": "Expiration Rules Builder",
+    "activateRule": "Activate Rule"
+  },
+  "couponValidation": {
+    "valid": "Coupon valid",
+    "invalid": "Coupon invalid"
+  },
+  "discountPerformance": {
+    "title": "Discount Performance",
+    "totalRedemptions": "Total Redemptions",
+    "revenueWithDiscount": "Revenue with Discount",
+    "discountGiven": "Discount Given",
+    "endDiscount": "End Discount"
+  },
+  "analyticsPage": {
+    "title": "Analytics",
+    "subtitle": "Pre-aggregated sales, waste, and machine performance insights.",
+    "periodLabel": "Period",
+    "tabs": {
+      "overview": "Overview",
+      "profitability": "Profitability"
+    },
+    "filters": {
+      "period": "Period",
+      "custom": "Custom",
+      "from": "From",
+      "to": "To",
+      "machine": "Machine",
+      "allMachines": "All machines",
+      "category": "Category",
+      "allCategories": "All categories",
+      "apply": "Apply Filters",
+      "reset": "Reset"
+    },
+    "kpis": {
+      "revenue": "Total Revenue",
+      "transactions": "Total Transactions",
+      "aov": "Average Order Value",
+      "wasteRate": "Waste Rate",
+      "noBaseline": "No baseline"
+    },
+    "chart": {
+      "title": "Revenue Trend",
+      "gross": "Gross Revenue",
+      "net": "Net to Operator",
+      "transactions": "Transactions"
+    },
+    "productTable": {
+      "title": "Product Performance",
+      "exportCsv": "Export CSV",
+      "empty": "No product data for this filter.",
+      "columns": {
+        "product": "Product",
+        "unitsSold": "Units Sold",
+        "revenue": "Revenue",
+        "sellThrough": "Sell-Through %",
+        "wasted": "Wasted",
+        "wastePct": "Waste %"
+      },
+      "sort": {
+        "revenueDesc": "Revenue (High to Low)",
+        "revenueAsc": "Revenue (Low to High)",
+        "unitsDesc": "Units Sold (High to Low)",
+        "unitsAsc": "Units Sold (Low to High)",
+        "wasteDesc": "Waste % (High to Low)",
+        "wasteAsc": "Waste % (Low to High)",
+        "nameAsc": "Name (A-Z)"
+      }
+    },
+    "machineComparison": {
+      "title": "Machine Revenue Comparison",
+      "empty": "No machine data for this filter.",
+      "exportCsv": "Export CSV",
+      "columns": {
+        "machine": "Machine",
+        "revenue": "Revenue",
+        "transactions": "Transactions",
+        "aov": "AOV",
+        "topProduct": "Top Product",
+        "wastePct": "Waste %",
+        "rank": "Rank"
+      }
+    }
+  },
+  "profitabilitySettings": {
+    "title": "Profitability Settings",
+    "subtitle": "Configure COGS percentages by category and product overrides.",
+    "viewReport": "View Profitability Report",
+    "readOnly": "You have read-only access. Contact an admin to update COGS settings.",
+    "categoryHelp": "Default COGS for this category.",
+    "activeValue": "Current: {value}%",
+    "categoryCogsLabel": "Category COGS %",
+    "productOverrides": "Product overrides",
+    "overrideValue": "Override: {value}%",
+    "productCogsLabel": "Product COGS %",
+    "save": "Save",
+    "saveOverride": "Save Override",
+    "clear": "Clear",
+    "messages": {
+      "categorySaved": "Category COGS saved.",
+      "productSaved": "Product override saved.",
+      "categoryCleared": "Category COGS removed.",
+      "productCleared": "Product override removed."
+    },
+    "errors": {
+      "invalidPercent": "Enter a valid percentage between 0 and 100.",
+      "saveFailed": "Unable to save COGS setting.",
+      "deleteFailed": "Unable to remove COGS setting."
+    }
+  },
+  "profitabilityTab": {
+    "title": "Profitability by Machine",
+    "subtitle": "Revenue, costs, and net margin for each machine in the selected period.",
+    "lowMarginWarning": "Low margin warning (<15%): {machines}",
+    "yes": "YES",
+    "no": "NO",
+    "empty": "No profitability rows for this filter.",
+    "columns": {
+      "machine": "Machine",
+      "revenue": "Revenue",
+      "cogs": "Est. COGS",
+      "grossMargin": "Gross Margin",
+      "platformFee": "Platform Fee",
+      "stripeFee": "Stripe Fee",
+      "refunds": "Refunds",
+      "net": "Net to Operator",
+      "grossMarginPct": "Gross Margin %",
+      "netMarginPct": "Net Margin %",
+      "profitable": "Profitable?"
+    }
+  },
+  "inventoryAnalytics": {
+    "title": "Inventory Analytics",
+    "wasteReport": {
+      "title": "Waste Report",
+      "empty": "No waste rows in this period.",
+      "units": "{count} units wasted"
+    },
+    "stockoutEvents": {
+      "title": "Stockout Events",
+      "empty": "No stockout events detected.",
+      "gap": "Expected {expected}, counted {counted}, gap {gap}"
+    },
+    "restockFrequency": {
+      "title": "Restock Frequency",
+      "empty": "Not enough completed sessions.",
+      "value": "{days} days avg across {sessions} sessions"
+    }
+  },
   "auth": {
     "login": {
       "title": "Operator Login",
@@ -607,5 +1157,205 @@
   "common": {
     "since": "ago",
     "justNow": "just now"
+  },
+  "consumer": {
+    "nav": {
+      "map": "Map",
+      "products": "Products",
+      "profile": "Profile"
+    },
+    "addToHome": {
+      "title": "Install this app",
+      "subtitle": "Add this store to your home screen for faster access.",
+      "install": "Add to Home",
+      "dismiss": "Not now"
+    },
+    "map": {
+      "title": "Nearby Machines",
+      "viewInventory": "View Inventory",
+      "loadingMap": "Loading map...",
+      "distanceUnknown": "Distance unavailable"
+    },
+    "inventory": {
+      "uncategorized": "Uncategorized",
+      "happyHourActive": "Happy Hour is active now",
+      "outOfStock": "Agotado / Out of Stock",
+      "onSale": "On Sale! -{discount}% ",
+      "noNutritionData": "No nutritional info available.",
+      "allergens": "Allergens",
+      "noAllergens": "No allergens declared."
+    },
+    "login": {
+      "title": "Sign in with phone",
+      "subtitleRequest": "Enter your phone number to receive a one-time code.",
+      "subtitleVerify": "Enter the 6-digit code sent by SMS.",
+      "invalidPhone": "Please enter a valid phone number.",
+      "otpRequestError": "Could not send code. Try again.",
+      "otpRequested": "Code sent. Check your SMS.",
+      "otpVerifyError": "Invalid code. Try again.",
+      "bootstrapError": "Could not complete profile setup.",
+      "phoneLabel": "Phone number",
+      "sendOtp": "Send code",
+      "otpLabel": "Verification code",
+      "verifyOtp": "Verify code",
+      "changePhone": "Use a different phone"
+    },
+    "profile": {
+      "hello": "Profile",
+      "guest": "Guest",
+      "credits": "Credits balance",
+      "pushTitle": "Push Notifications",
+      "pushSubtitle": "Receive alerts and updates from this operator.",
+      "pushUpdateError": "Could not update notification preferences.",
+      "pushEnabled": "Push notifications enabled.",
+      "pushDisabled": "Push notifications disabled.",
+      "pushNotSupported": "Your browser does not support push notifications.",
+      "pushPermissionDenied": "Permission denied for notifications.",
+      "pushConfigMissing": "Push notifications are not configured.",
+      "pushSubscribeError": "Could not save push subscription.",
+      "historyTitle": "Purchase History",
+      "noPurchases": "No purchases yet.",
+      "feedback": {
+        "title": "Feedback",
+        "nonePending": "No pending feedback requests.",
+        "invalidRating": "Select a rating from 1 to 5.",
+        "submitError": "Could not submit feedback. Try again.",
+        "submitted": "Feedback submitted.",
+        "commentPlaceholder": "Tell us what happened...",
+        "sent": "Sent",
+        "submit": "Send feedback"
+      }
+    },
+    "products": {
+      "title": "Products",
+      "noProducts": "No products available."
+    }
+  },
+  "marketing": {
+    "notifications": {
+      "pageTitle": "Push Notifications",
+      "pageDescription": "Compose and send targeted push campaigns to consumers.",
+      "composeTitle": "Compose Notification",
+      "titleLabel": "Title",
+      "messageLabel": "Message",
+      "targetLabel": "Target",
+      "targetAll": "All Users",
+      "targetMachine": "By Machine",
+      "targetInactive": "Inactive > 7 Days",
+      "targetCustom": "Custom Segment SQL",
+      "targetDirect": "Direct Consumers",
+      "targetMachinePicker": "Select Machine",
+      "selectMachine": "Select a machine",
+      "customSqlLabel": "Custom Segment SQL WHERE clause",
+      "deepLinkLabel": "Deep Link Machine",
+      "noDeepLink": "No deep link",
+      "scheduleLabel": "Schedule",
+      "sendNow": "Send Now",
+      "scheduleForLater": "Schedule",
+      "scheduleAtLabel": "Scheduled for",
+      "sendAction": "Send",
+      "scheduleAction": "Schedule",
+      "previewLabel": "Preview",
+      "previewTitlePlaceholder": "Notification title",
+      "previewBodyPlaceholder": "Notification body",
+      "sentSuccess": "Notification sent.",
+      "queuedSuccess": "Notification queued for dispatch.",
+      "genericError": "Could not send notification.",
+      "historyTitle": "History",
+      "historyDate": "Date",
+      "historyTitleCol": "Title",
+      "historyTarget": "Target",
+      "historySent": "Sent",
+      "historyScheduled": "Scheduled",
+      "historyEmpty": "No notifications yet."
+    },
+    "credits": {
+      "pageTitle": "Loyalty Credits",
+      "pageDescription": "Search consumers and award credits manually.",
+      "searchTitle": "Search Consumer",
+      "phonePlaceholder": "Phone number",
+      "searchAction": "Search",
+      "nameCol": "Name",
+      "phoneCol": "Phone",
+      "balanceCol": "Credits",
+      "purchasesCol": "Purchases",
+      "actionsCol": "Actions",
+      "selectAction": "Select",
+      "ledgerAction": "Ledger",
+      "emptyResults": "No consumers found.",
+      "awardTitle": "Award Credits",
+      "selectedConsumer": "Selected consumer",
+      "amountLabel": "Amount ($)",
+      "reasonLabel": "Reason",
+      "reasonManual": "Manual adjustment",
+      "reasonService": "Service recovery",
+      "reasonPromo": "Promotion",
+      "noteLabel": "Note",
+      "awardAction": "Award Credits",
+      "awardSuccess": "Credits awarded successfully.",
+      "awardError": "Failed to award credits.",
+      "selectConsumerError": "Select a consumer first.",
+      "invalidAmount": "Enter a valid amount greater than 0.",
+      "ledgerTitle": "Credit Ledger",
+      "currentBalance": "Current balance",
+      "ledgerEmpty": "No ledger entries."
+    },
+    "automations": {
+      "pageTitle": "Automated Bonuses",
+      "pageDescription": "Create credit rules triggered by consumer purchase milestones.",
+      "createTitle": "Create Rule",
+      "nameLabel": "Rule name",
+      "triggerTypeLabel": "Trigger type",
+      "triggerWelcome": "Welcome (first purchase)",
+      "triggerNth": "Nth Purchase",
+      "triggerSpend": "Spend Threshold",
+      "triggerValueLabel": "Trigger value",
+      "rewardCreditsLabel": "Reward credits ($)",
+      "activateAction": "Activate Rule",
+      "createSuccess": "Rule created.",
+      "createError": "Could not create rule.",
+      "rulesTitle": "Active Rules",
+      "colName": "Name",
+      "colTrigger": "Trigger",
+      "colReward": "Reward",
+      "colStatus": "Status",
+      "colCreated": "Created",
+      "colActions": "Actions",
+      "active": "Active",
+      "paused": "Paused",
+      "deactivateAction": "Deactivate",
+      "activateAgainAction": "Activate",
+      "rulesEmpty": "No automation rules yet."
+    },
+    "feedback": {
+      "pageTitle": "Feedback Dashboard",
+      "pageDescription": "Review ratings and reply to consumer comments.",
+      "filterMachine": "Machine",
+      "allMachines": "All machines",
+      "filterRating": "Rating",
+      "allRatings": "All ratings",
+      "filterFrom": "From",
+      "filterTo": "To",
+      "applyFilters": "Apply",
+      "clearFilters": "Clear",
+      "machineSummaryTitle": "Avg Rating by Machine (Top 5)",
+      "productSummaryTitle": "Avg Rating by Product (Top 5)",
+      "summaryEmpty": "No data for selected filters.",
+      "tableTitle": "Feedback",
+      "dateCol": "Date",
+      "consumerCol": "Consumer phone",
+      "machineCol": "Machine",
+      "productCol": "Product",
+      "ratingCol": "Rating",
+      "commentCol": "Comment",
+      "replyCol": "Reply",
+      "replyAction": "Reply",
+      "tableEmpty": "No feedback rows found.",
+      "replyModalTitle": "Reply to consumer",
+      "replySubmit": "Send reply",
+      "replyCancel": "Cancel",
+      "replySuccess": "Reply saved.",
+      "replyError": "Could not save reply."
+    }
   }
 }

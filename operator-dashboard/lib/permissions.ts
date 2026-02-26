@@ -12,6 +12,7 @@ export type PermissionModule =
   | 'financials'
   | 'discounts'
   | 'analytics'
+  | 'marketing'
   | 'settings'
   | 'users';
 
@@ -26,6 +27,7 @@ export const PERMISSIONS: Record<UserRole, Partial<Record<PermissionModule, Perm
     financials: ['r', 'w'],
     discounts: ['r', 'w'],
     analytics: ['r'],
+    marketing: ['r', 'w'],
     settings: ['r', 'w'],
     users: ['r', 'w'],
   },
@@ -39,6 +41,7 @@ export const PERMISSIONS: Record<UserRole, Partial<Record<PermissionModule, Perm
     financials: ['r'],
     discounts: ['r', 'w'],
     analytics: ['r'],
+    marketing: ['r', 'w'],
   },
   driver: {
     restock: ['r', 'w'],
@@ -52,6 +55,7 @@ export const PERMISSIONS: Record<UserRole, Partial<Record<PermissionModule, Perm
     transactions: ['r'],
     discounts: ['r'],
     analytics: ['r'],
+    marketing: ['r'],
   },
 };
 

@@ -1,3 +1,6 @@
+import enMessages from '@/messages/en.json';
+import esMessages from '@/messages/es.json';
+
 export const SUPPORTED_LOCALES = ['en', 'es'] as const;
 export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 
@@ -8,7 +11,7 @@ export function normalizeLocale(value: string | null | undefined): SupportedLoca
 
 export async function getMessages(locale: SupportedLocale) {
   if (locale === 'es') {
-    return (await import('@/messages/es.json')).default;
+    return esMessages;
   }
-  return (await import('@/messages/en.json')).default;
+  return enMessages;
 }

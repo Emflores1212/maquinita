@@ -10,7 +10,8 @@
     "discounts": "Descuentos",
     "analytics": "Analiticas",
     "settings": "Configuracion",
-    "help": "Ayuda"
+    "help": "Ayuda",
+    "marketing": "Marketing"
   },
   "topbar": {
     "operator": "Operador",
@@ -336,7 +337,17 @@
   "notifications": {
     "title": "Notificaciones",
     "markAllRead": "Marcar todas como leidas",
-    "empty": "No hay alertas"
+    "empty": "No hay alertas",
+    "offlineSyncToast": "Transacciones offline sincronizadas.",
+    "banner": {
+      "title": "Activa alertas push",
+      "description": "Recibe alertas criticas de maquinas en tiempo real en este dispositivo.",
+      "action": "Activar notificaciones",
+      "enabling": "Activando...",
+      "permissionDenied": "No se otorgo permiso de notificaciones.",
+      "missingKey": "Falta NEXT_PUBLIC_VAPID_PUBLIC_KEY en el entorno.",
+      "subscribeError": "No se pudo activar notificaciones push."
+    }
   },
   "help": {
     "title": "Ayuda",
@@ -411,6 +422,7 @@
       "restock": "Reabastecer",
       "transactions": "Transacciones",
       "financials": "Finanzas",
+      "alerts": "Alertas",
       "settings": "Configuracion"
     },
     "temperatureGauge": "Indicador de Temperatura",
@@ -421,12 +433,88 @@
     "commands": "Comandos",
     "runDiagnostics": "Ejecutar Diagnostico",
     "remoteLockdown": "Bloqueo Remoto (Stub)",
+    "connectivity": {
+      "title": "Conectividad",
+      "ethernet": "Ethernet",
+      "wifi": "Wi-Fi",
+      "cellular": "Celular",
+      "lastHeartbeat": "Ultimo heartbeat",
+      "never": "Nunca",
+      "cellularBanner": "Operando con respaldo celular — revisa el router"
+    },
+    "commandsPanel": {
+      "title": "Comandos Remotos",
+      "lockMachine": "Bloquear Maquina",
+      "unlockMachine": "Desbloquear Maquina",
+      "rebootMachine": "Reiniciar Maquina",
+      "adjustTemp": "Ajustar Temperatura",
+      "confirmLockTitle": "Bloquear esta maquina?",
+      "confirmLockBody": "La maquina rechazara nuevos accesos hasta ejecutar un comando de desbloqueo.",
+      "confirmUnlockTitle": "Desbloquear esta maquina?",
+      "confirmUnlockBody": "Esto habilita acceso normal al confirmar ejecucion en la maquina.",
+      "confirmRebootTitle": "Reiniciar esta maquina?",
+      "confirmRebootBody": "La maquina quedara offline brevemente durante el reinicio.",
+      "confirmTempTitle": "Ajustar temperatura objetivo?",
+      "tempRange": "Rango seguro: {min}°F a {max}°F",
+      "tempUnsupported": "El ajuste remoto de temperatura no aplica para este tipo de maquina.",
+      "cancel": "Cancelar",
+      "confirm": "Confirmar",
+      "statusSending": "Enviando...",
+      "statusAcknowledged": "Maquina recibio comando...",
+      "statusExecuted": "Comando ejecutado",
+      "statusFailed": "Fallido",
+      "feedback": {
+        "sending": "Enviando comando...",
+        "received": "La maquina recibio el comando.",
+        "executed": "✓ Comando ejecutado",
+        "failed": "El comando fallo.",
+        "timeout": "La maquina no respondio — revisa conectividad",
+        "issueError": "No se pudo emitir el comando"
+      }
+    },
+    "commandHistory": {
+      "title": "Historial de Comandos",
+      "type": "Tipo",
+      "issuedBy": "Emitido Por",
+      "issuedAt": "Emitido En",
+      "status": "Estado",
+      "executedAt": "Ejecutado En",
+      "empty": "Aun no hay comandos."
+    },
+    "errorGuide": {
+      "causes": "Posibles causas",
+      "steps": "Pasos recomendados",
+      "contactSupport": "Contactar Soporte",
+      "urgency": {
+        "high": "Alta",
+        "medium": "Media",
+        "low": "Baja"
+      }
+    },
     "recentAlerts": "Alertas Recientes",
     "noRecentAlerts": "No hay alertas recientes para esta maquina.",
+    "alerts": {
+      "activeTitle": "Alertas Activas",
+      "noneActive": "No hay alertas activas en este momento.",
+      "resolve": "Resolver",
+      "resolveError": "No se pudo resolver la alerta.",
+      "historyTitle": "Historial de Alertas",
+      "noneHistory": "Aun no hay alertas resueltas.",
+      "type": "Tipo",
+      "message": "Mensaje",
+      "resolvedBy": "Resuelta Por",
+      "timeToResolve": "Tiempo de Resolucion",
+      "temperature24h": "Temperatura (Ultimas 24h)",
+      "noTemperatureData": "No se encontraron lecturas de temperatura en las ultimas 24 horas."
+    },
     "phase2Placeholder": "Esta seccion se implementara en la Fase 2.",
     "phase3Placeholder": "Esta seccion se implementara en la Fase 3."
   },
   "machineSettings": {
+    "tabs": {
+      "general": "General",
+      "alerts": "Alertas"
+    },
     "displayName": "Nombre de Pantalla",
     "required": "Este campo es obligatorio",
     "preAuthAmount": "Monto de Preautorizacion ($)",
@@ -436,6 +524,20 @@
     "alertThreshold": "Umbral de Alerta",
     "autoLockdown": "Bloqueo automatico por umbral",
     "assignedDrivers": "Conductores Asignados",
+    "alerts": {
+      "delayLabel": "Retraso de alerta",
+      "channels": {
+        "email": "Email",
+        "sms": "SMS",
+        "push": "Push"
+      },
+      "types": {
+        "OFFLINE": "Sin conexion",
+        "TOO_WARM": "Temperatura Alta",
+        "RFID_ERROR": "Error RFID",
+        "LOW_STOCK": "Stock Bajo"
+      }
+    },
     "save": "Guardar Configuracion",
     "saveError": "No se pudo guardar la configuracion",
     "saveSuccess": "Configuracion de maquina actualizada"
@@ -582,6 +684,454 @@
       "error": "No se pudo transferir el item."
     }
   },
+  "transactionsPage": {
+    "title": "Transacciones",
+    "subtitle": "Busca, filtra, reembolsa y exporta transacciones de maquinas.",
+    "exportCsv": "Exportar CSV",
+    "copySuccess": "Copiado al portapapeles.",
+    "copyError": "No se pudo copiar el valor.",
+    "filters": {
+      "since": "Desde",
+      "until": "Hasta",
+      "status": "Estado",
+      "machines": "Maquinas",
+      "search": "Buscar",
+      "searchPlaceholder": "ID, Stripe ID o correo del cliente",
+      "apply": "Aplicar Filtros",
+      "clear": "Limpiar"
+    },
+    "presets": {
+      "today": "Hoy",
+      "yesterday": "Ayer",
+      "last7": "Ultimos 7D",
+      "last30": "Ultimos 30D"
+    },
+    "status": {
+      "all": "Todos",
+      "completed": "Completada",
+      "pending": "Pendiente",
+      "refunded": "Reembolsada",
+      "failed": "Fallida",
+      "synced": "Sincronizada"
+    },
+    "summary": {
+      "revenue": "Ingresos Totales",
+      "count": "Total Transacciones",
+      "avg": "Ticket Promedio",
+      "refunded": "Total Reembolsado"
+    },
+    "table": {
+      "dateTime": "Fecha/Hora",
+      "id": "ID",
+      "machine": "Maquina",
+      "amount": "Monto",
+      "status": "Estado",
+      "details": "Detalles",
+      "open": "Abrir"
+    },
+    "empty": "No se encontraron transacciones con los filtros actuales.",
+    "pagination": {
+      "label": "Pagina {page} de {totalPages} • {totalItems} total",
+      "previous": "Anterior",
+      "next": "Siguiente"
+    },
+    "details": {
+      "title": "Detalle de Transaccion",
+      "id": "ID de Transaccion:",
+      "machine": "Maquina:",
+      "dateTime": "Fecha/Hora:",
+      "items": "Items",
+      "subtotal": "Subtotal",
+      "tax": "Impuesto ({rate}%)",
+      "discount": "Descuento",
+      "refunded": "Reembolsado",
+      "total": "Total",
+      "payment": "Pago:",
+      "cardEnding": "Tarjeta terminada en {last4}",
+      "timeline": "Linea de Estado",
+      "viewRfid": "Ver Datos RFID",
+      "hideRfid": "Ocultar Datos RFID",
+      "noRfid": "No hay datos RFID EPC para esta transaccion.",
+      "issueRefund": "Emitir Reembolso",
+      "resendReceipt": "Reenviar Recibo"
+    },
+    "refund": {
+      "title": "Emitir Reembolso",
+      "available": "Disponible para reembolso",
+      "step1": "Paso 1 — Tipo de reembolso",
+      "step2": "Paso 2 — Monto",
+      "step3": "Paso 3 — Motivo",
+      "step4": "Paso 4 — Confirmar",
+      "full": "Reembolso Completo",
+      "partial": "Reembolso Parcial",
+      "fullAuto": "El reembolso completo devolvera todo el saldo reembolsable.",
+      "customAmount": "Monto personalizado ($)",
+      "otherPlaceholder": "Agregar detalle del motivo",
+      "preview": "Reembolsar {amount} a la tarjeta ••••{last4}?",
+      "cancel": "Cancelar",
+      "back": "Atras",
+      "next": "Siguiente",
+      "confirm": "Confirmar Reembolso",
+      "invalidAmount": "El monto del reembolso debe ser mayor a cero.",
+      "exceeds": "El monto excede el saldo disponible para reembolso.",
+      "success": "Reembolso emitido correctamente por {amount}.",
+      "error": "No se pudo procesar el reembolso."
+    },
+    "reasons": {
+      "customer_complaint": "Queja del Cliente",
+      "quality": "Calidad",
+      "machine_error": "Error de Maquina",
+      "duplicate": "Duplicado",
+      "other": "Otro"
+    },
+    "receipt": {
+      "success": "Correo de recibo enviado.",
+      "error": "No se pudo reenviar el recibo."
+    }
+  },
+  "settingsPage": {
+    "receipts": {
+      "title": "Plantilla de Recibo",
+      "subtitle": "Personaliza el branding de los correos de recibo al cliente.",
+      "readOnly": "Tienes acceso de solo lectura. Contacta a un admin para editar esta configuracion.",
+      "logoUrl": "URL del Logo",
+      "uploadLogo": "Subir Logo",
+      "uploading": "Subiendo...",
+      "uploadSuccess": "Logo subido correctamente.",
+      "primaryColor": "Color Primario",
+      "footerText": "Texto de Pie",
+      "supportEmail": "Correo de Soporte",
+      "supportPhone": "Telefono de Soporte",
+      "save": "Guardar Plantilla",
+      "saveSuccess": "Plantilla de recibo guardada.",
+      "previewTitle": "Vista Previa",
+      "previewReceipt": "Recibo de Transaccion",
+      "previewBody": "Esta vista previa refleja tus valores de branding antes de enviar recibos reales.",
+      "defaultFooter": "Gracias por tu compra con Maquinita.",
+      "supportLine": "Soporte: {email} • {phone}",
+      "errors": {
+        "invalidImage": "Selecciona un archivo de imagen.",
+        "logoTooLarge": "El archivo de logo excede el limite de 5MB.",
+        "uploadFailed": "Fallo la subida del logo.",
+        "saveFailed": "No se pudo guardar la plantilla de recibo."
+      }
+    },
+    "profitability": {
+      "title": "Configuracion de Rentabilidad",
+      "subtitle": "Define porcentajes COGS por categoria y producto para el reporte de rentabilidad.",
+      "open": "Abrir Configuracion de Rentabilidad"
+    }
+  },
+  "financialsPage": {
+    "title": "Finanzas",
+    "subtitle": "Monitorea ingresos, comisiones, pagos y reportes fiscales en una sola vista.",
+    "links": {
+      "banking": "Banca",
+      "payouts": "Pagos"
+    },
+    "periodLabel": "Periodo",
+    "filters": {
+      "period": "Periodo",
+      "custom": "Personalizado",
+      "from": "Desde",
+      "to": "Hasta",
+      "machine": "Maquina",
+      "allMachines": "Todas las maquinas",
+      "apply": "Aplicar Filtros",
+      "reset": "Reiniciar"
+    },
+    "kpis": {
+      "grossRevenue": "Ingreso Bruto",
+      "platformFees": "Comisiones de Plataforma",
+      "stripeFees": "Comisiones Stripe",
+      "netToOperator": "Neto para Operador",
+      "noBaseline": "Sin base comparativa"
+    },
+    "chart": {
+      "title": "Tendencia de Ingresos",
+      "grossToggle": "Ingreso Bruto",
+      "netToggle": "Neto para Operador"
+    },
+    "machineTable": {
+      "title": "Rendimiento por Maquina",
+      "exportCsv": "Exportar CSV",
+      "columns": {
+        "machine": "Maquina",
+        "gross": "Bruto",
+        "transactions": "Transacciones",
+        "refunds": "Reembolsos",
+        "platformFee": "Comision Plataforma",
+        "net": "Neto",
+        "percentOfTotal": "% del Total"
+      },
+      "empty": "No hay filas por maquina para este filtro."
+    },
+    "fees": {
+      "title": "Tus Comisiones Maquinita",
+      "saasFee": "Cuota SaaS: {amount}/mes",
+      "txFee": "Comision por transaccion: {percent} + {fixed} por transaccion",
+      "calculatorInput": "Monto de venta",
+      "breakdown": "En una venta de {sale}: Plataforma {platform} | Stripe {stripe} | Tu recibes {net}"
+    },
+    "tax": {
+      "title": "Exportacion de Impuestos",
+      "exportCsv": "Exportar CSV",
+      "exportPdf": "Descargar PDF",
+      "pdfTitle": "Reporte de Impuesto de Ventas",
+      "generatedAt": "Generado",
+      "table": {
+        "machine": "Maquina",
+        "grossSales": "Ventas Brutas",
+        "taxCollected": "Impuesto Cobrado",
+        "taxRate": "Tasa de Impuesto"
+      },
+      "totals": {
+        "gross": "Total Ventas Brutas",
+        "tax": "Total Impuesto Cobrado"
+      },
+      "empty": "No hay filas de impuestos para este filtro."
+    }
+  },
+  "bankingPage": {
+    "title": "Banca y Calendario de Pagos",
+    "subtitle": "Conecta Stripe Express y administra la frecuencia de pagos.",
+    "status": {
+      "title": "Estado de Conexion",
+      "unconnected": "Sin conectar",
+      "pending": "Verificacion Pendiente",
+      "active": "Activa",
+      "restricted": "Restringida",
+      "connectButton": "Conectar Cuenta Bancaria",
+      "accountId": "Cuenta Stripe",
+      "bank": "Banco",
+      "last4": "Ultimos 4",
+      "accountType": "Tipo de Cuenta"
+    },
+    "schedule": {
+      "title": "Calendario de Pagos",
+      "nextPayout": "Proximo pago",
+      "daily": "Diario",
+      "weekly": "Semanal",
+      "monthly": "Mensual",
+      "weeklyDay": "Dia de pago semanal",
+      "monthlyDay": "Dia de pago mensual",
+      "save": "Guardar Calendario",
+      "saveSuccess": "Calendario guardado. Proximo pago: {date}",
+      "saveError": "No se pudo guardar el calendario de pagos."
+    },
+    "messages": {
+      "connected": "Onboarding de Connect completado.",
+      "refresh": "Continua el onboarding para finalizar la configuracion.",
+      "forbidden": "No tienes permiso para conectar esta cuenta.",
+      "error": "No se pudo iniciar el onboarding de Stripe Connect."
+    },
+    "days": {
+      "monday": "Lunes",
+      "tuesday": "Martes",
+      "wednesday": "Miercoles",
+      "thursday": "Jueves",
+      "friday": "Viernes",
+      "saturday": "Sabado",
+      "sunday": "Domingo"
+    }
+  },
+  "payoutsPage": {
+    "title": "Historial de Pagos",
+    "subtitle": "Revisa pagos y transacciones incluidas en cada transferencia.",
+    "status": {
+      "scheduled": "Programado",
+      "inTransit": "En Transito",
+      "paid": "Pagado",
+      "failed": "Fallido"
+    },
+    "table": {
+      "date": "Fecha",
+      "period": "Periodo",
+      "gross": "Bruto",
+      "fees": "Comisiones",
+      "refunds": "Reembolsos",
+      "netPaid": "Neto Pagado",
+      "status": "Estado",
+      "transactions": "Transacciones",
+      "openTransactions": "Transacciones"
+    },
+    "modal": {
+      "title": "Transacciones del Pago",
+      "date": "Fecha:",
+      "period": "Periodo:",
+      "netPaid": "Neto pagado:",
+      "columns": {
+        "transactionId": "ID Transaccion",
+        "machine": "Maquina",
+        "gross": "Bruto",
+        "fees": "Comisiones",
+        "refunds": "Reembolsos",
+        "net": "Neto"
+      },
+      "empty": "No hay transacciones mapeadas para este pago."
+    },
+    "empty": "No se encontraron pagos."
+  },
+  "discountsPage": {
+    "title": "Motor de Descuentos",
+    "subtitle": "Crea y administra campanas de descuentos."
+  },
+  "discountDialog": {
+    "newTitle": "Nuevo Descuento",
+    "editTitle": "Editar Descuento",
+    "activate": "Activar",
+    "save": "Guardar"
+  },
+  "expirationRules": {
+    "title": "Creador de Reglas de Expiracion",
+    "activateRule": "Activar Regla"
+  },
+  "couponValidation": {
+    "valid": "Cupon valido",
+    "invalid": "Cupon invalido"
+  },
+  "discountPerformance": {
+    "title": "Rendimiento de Descuento",
+    "totalRedemptions": "Redenciones Totales",
+    "revenueWithDiscount": "Ingreso con Descuento",
+    "discountGiven": "Descuento Entregado",
+    "endDiscount": "Finalizar Descuento"
+  },
+  "analyticsPage": {
+    "title": "Analiticas",
+    "subtitle": "Insights agregados de ventas, merma y rendimiento por maquina.",
+    "periodLabel": "Periodo",
+    "tabs": {
+      "overview": "Resumen",
+      "profitability": "Rentabilidad"
+    },
+    "filters": {
+      "period": "Periodo",
+      "custom": "Personalizado",
+      "from": "Desde",
+      "to": "Hasta",
+      "machine": "Maquina",
+      "allMachines": "Todas las maquinas",
+      "category": "Categoria",
+      "allCategories": "Todas las categorias",
+      "apply": "Aplicar Filtros",
+      "reset": "Reiniciar"
+    },
+    "kpis": {
+      "revenue": "Ingreso Total",
+      "transactions": "Transacciones Totales",
+      "aov": "Valor Promedio por Orden",
+      "wasteRate": "Tasa de Merma",
+      "noBaseline": "Sin base comparativa"
+    },
+    "chart": {
+      "title": "Tendencia de Ingresos",
+      "gross": "Ingreso Bruto",
+      "net": "Neto para Operador",
+      "transactions": "Transacciones"
+    },
+    "productTable": {
+      "title": "Rendimiento de Productos",
+      "exportCsv": "Exportar CSV",
+      "empty": "No hay datos de productos para este filtro.",
+      "columns": {
+        "product": "Producto",
+        "unitsSold": "Unidades Vendidas",
+        "revenue": "Ingreso",
+        "sellThrough": "% Sell-Through",
+        "wasted": "Merma",
+        "wastePct": "% Merma"
+      },
+      "sort": {
+        "revenueDesc": "Ingreso (Mayor a Menor)",
+        "revenueAsc": "Ingreso (Menor a Mayor)",
+        "unitsDesc": "Unidades (Mayor a Menor)",
+        "unitsAsc": "Unidades (Menor a Mayor)",
+        "wasteDesc": "Merma % (Mayor a Menor)",
+        "wasteAsc": "Merma % (Menor a Mayor)",
+        "nameAsc": "Nombre (A-Z)"
+      }
+    },
+    "machineComparison": {
+      "title": "Comparacion de Ingreso por Maquina",
+      "empty": "No hay datos de maquinas para este filtro.",
+      "exportCsv": "Exportar CSV",
+      "columns": {
+        "machine": "Maquina",
+        "revenue": "Ingreso",
+        "transactions": "Transacciones",
+        "aov": "AOV",
+        "topProduct": "Producto Top",
+        "wastePct": "% Merma",
+        "rank": "Rango"
+      }
+    }
+  },
+  "profitabilitySettings": {
+    "title": "Configuracion de Rentabilidad",
+    "subtitle": "Configura porcentajes COGS por categoria y overrides por producto.",
+    "viewReport": "Ver Reporte de Rentabilidad",
+    "readOnly": "Tienes acceso de solo lectura. Contacta a un admin para actualizar COGS.",
+    "categoryHelp": "COGS por defecto para esta categoria.",
+    "activeValue": "Actual: {value}%",
+    "categoryCogsLabel": "COGS Categoria %",
+    "productOverrides": "Overrides por producto",
+    "overrideValue": "Override: {value}%",
+    "productCogsLabel": "COGS Producto %",
+    "save": "Guardar",
+    "saveOverride": "Guardar Override",
+    "clear": "Limpiar",
+    "messages": {
+      "categorySaved": "COGS de categoria guardado.",
+      "productSaved": "Override de producto guardado.",
+      "categoryCleared": "COGS de categoria eliminado.",
+      "productCleared": "Override de producto eliminado."
+    },
+    "errors": {
+      "invalidPercent": "Ingresa un porcentaje valido entre 0 y 100.",
+      "saveFailed": "No se pudo guardar la configuracion COGS.",
+      "deleteFailed": "No se pudo eliminar la configuracion COGS."
+    }
+  },
+  "profitabilityTab": {
+    "title": "Rentabilidad por Maquina",
+    "subtitle": "Ingresos, costos y margen neto por maquina en el periodo seleccionado.",
+    "lowMarginWarning": "Alerta de bajo margen (<15%): {machines}",
+    "yes": "SI",
+    "no": "NO",
+    "empty": "No hay filas de rentabilidad para este filtro.",
+    "columns": {
+      "machine": "Maquina",
+      "revenue": "Ingreso",
+      "cogs": "COGS Est.",
+      "grossMargin": "Margen Bruto",
+      "platformFee": "Comision Plataforma",
+      "stripeFee": "Comision Stripe",
+      "refunds": "Reembolsos",
+      "net": "Neto para Operador",
+      "grossMarginPct": "% Margen Bruto",
+      "netMarginPct": "% Margen Neto",
+      "profitable": "Rentable?"
+    }
+  },
+  "inventoryAnalytics": {
+    "title": "Analiticas de Inventario",
+    "wasteReport": {
+      "title": "Reporte de Merma",
+      "empty": "No hay filas de merma en este periodo.",
+      "units": "{count} unidades en merma"
+    },
+    "stockoutEvents": {
+      "title": "Eventos de Stockout",
+      "empty": "No se detectaron eventos de stockout.",
+      "gap": "Esperado {expected}, contado {counted}, gap {gap}"
+    },
+    "restockFrequency": {
+      "title": "Frecuencia de Restock",
+      "empty": "No hay suficientes sesiones completadas.",
+      "value": "{days} dias promedio en {sessions} sesiones"
+    }
+  },
   "auth": {
     "login": {
       "title": "Login Operador",
@@ -607,5 +1157,205 @@
   "common": {
     "since": "hace",
     "justNow": "ahora"
+  },
+  "consumer": {
+    "nav": {
+      "map": "Mapa",
+      "products": "Productos",
+      "profile": "Perfil"
+    },
+    "addToHome": {
+      "title": "Instala esta app",
+      "subtitle": "Agrega esta tienda a tu pantalla de inicio para abrirla mas rapido.",
+      "install": "Agregar al inicio",
+      "dismiss": "Ahora no"
+    },
+    "map": {
+      "title": "Maquinas cercanas",
+      "viewInventory": "Ver inventario",
+      "loadingMap": "Cargando mapa...",
+      "distanceUnknown": "Distancia no disponible"
+    },
+    "inventory": {
+      "uncategorized": "Sin categoria",
+      "happyHourActive": "Happy Hour activo en este momento",
+      "outOfStock": "Agotado / Out of Stock",
+      "onSale": "En oferta! -{discount}% ",
+      "noNutritionData": "Sin informacion nutricional disponible.",
+      "allergens": "Alergenos",
+      "noAllergens": "Sin alergenos declarados."
+    },
+    "login": {
+      "title": "Iniciar sesion con telefono",
+      "subtitleRequest": "Ingresa tu telefono para recibir un codigo unico.",
+      "subtitleVerify": "Ingresa el codigo de 6 digitos enviado por SMS.",
+      "invalidPhone": "Ingresa un numero de telefono valido.",
+      "otpRequestError": "No se pudo enviar el codigo. Intenta de nuevo.",
+      "otpRequested": "Codigo enviado. Revisa tu SMS.",
+      "otpVerifyError": "Codigo invalido. Intenta de nuevo.",
+      "bootstrapError": "No se pudo completar la creacion del perfil.",
+      "phoneLabel": "Numero de telefono",
+      "sendOtp": "Enviar codigo",
+      "otpLabel": "Codigo de verificacion",
+      "verifyOtp": "Verificar codigo",
+      "changePhone": "Usar otro telefono"
+    },
+    "profile": {
+      "hello": "Perfil",
+      "guest": "Invitado",
+      "credits": "Saldo de creditos",
+      "pushTitle": "Notificaciones Push",
+      "pushSubtitle": "Recibe alertas y novedades de este operador.",
+      "pushUpdateError": "No se pudo actualizar la preferencia de notificaciones.",
+      "pushEnabled": "Notificaciones push activadas.",
+      "pushDisabled": "Notificaciones push desactivadas.",
+      "pushNotSupported": "Tu navegador no soporta notificaciones push.",
+      "pushPermissionDenied": "Permiso de notificaciones denegado.",
+      "pushConfigMissing": "Las notificaciones push no estan configuradas.",
+      "pushSubscribeError": "No se pudo guardar la suscripcion push.",
+      "historyTitle": "Historial de compras",
+      "noPurchases": "Aun no hay compras.",
+      "feedback": {
+        "title": "Comentarios",
+        "nonePending": "No hay solicitudes de comentario pendientes.",
+        "invalidRating": "Selecciona una calificacion de 1 a 5.",
+        "submitError": "No se pudo enviar el comentario. Intenta de nuevo.",
+        "submitted": "Comentario enviado.",
+        "commentPlaceholder": "Cuentanos que paso...",
+        "sent": "Enviado",
+        "submit": "Enviar comentario"
+      }
+    },
+    "products": {
+      "title": "Productos",
+      "noProducts": "No hay productos disponibles."
+    }
+  },
+  "marketing": {
+    "notifications": {
+      "pageTitle": "Notificaciones Push",
+      "pageDescription": "Crea y envia campanas push segmentadas para consumidores.",
+      "composeTitle": "Crear notificacion",
+      "titleLabel": "Titulo",
+      "messageLabel": "Mensaje",
+      "targetLabel": "Segmento",
+      "targetAll": "Todos los usuarios",
+      "targetMachine": "Por maquina",
+      "targetInactive": "Inactivos > 7 dias",
+      "targetCustom": "Segmento SQL personalizado",
+      "targetDirect": "Consumidores directos",
+      "targetMachinePicker": "Seleccionar maquina",
+      "selectMachine": "Selecciona una maquina",
+      "customSqlLabel": "SQL personalizado (WHERE)",
+      "deepLinkLabel": "Deep link a maquina",
+      "noDeepLink": "Sin deep link",
+      "scheduleLabel": "Programacion",
+      "sendNow": "Enviar ahora",
+      "scheduleForLater": "Programar",
+      "scheduleAtLabel": "Programado para",
+      "sendAction": "Enviar",
+      "scheduleAction": "Programar",
+      "previewLabel": "Vista previa",
+      "previewTitlePlaceholder": "Titulo de la notificacion",
+      "previewBodyPlaceholder": "Mensaje de la notificacion",
+      "sentSuccess": "Notificacion enviada.",
+      "queuedSuccess": "Notificacion en cola para envio.",
+      "genericError": "No se pudo enviar la notificacion.",
+      "historyTitle": "Historial",
+      "historyDate": "Fecha",
+      "historyTitleCol": "Titulo",
+      "historyTarget": "Segmento",
+      "historySent": "Enviados",
+      "historyScheduled": "Programado",
+      "historyEmpty": "Aun no hay notificaciones."
+    },
+    "credits": {
+      "pageTitle": "Creditos de lealtad",
+      "pageDescription": "Busca consumidores y otorga creditos manualmente.",
+      "searchTitle": "Buscar consumidor",
+      "phonePlaceholder": "Numero de telefono",
+      "searchAction": "Buscar",
+      "nameCol": "Nombre",
+      "phoneCol": "Telefono",
+      "balanceCol": "Creditos",
+      "purchasesCol": "Compras",
+      "actionsCol": "Acciones",
+      "selectAction": "Seleccionar",
+      "ledgerAction": "Movimientos",
+      "emptyResults": "No se encontraron consumidores.",
+      "awardTitle": "Otorgar creditos",
+      "selectedConsumer": "Consumidor seleccionado",
+      "amountLabel": "Monto ($)",
+      "reasonLabel": "Motivo",
+      "reasonManual": "Ajuste manual",
+      "reasonService": "Recuperacion de servicio",
+      "reasonPromo": "Promocion",
+      "noteLabel": "Nota",
+      "awardAction": "Otorgar creditos",
+      "awardSuccess": "Creditos otorgados correctamente.",
+      "awardError": "No se pudieron otorgar creditos.",
+      "selectConsumerError": "Selecciona primero un consumidor.",
+      "invalidAmount": "Ingresa un monto valido mayor que 0.",
+      "ledgerTitle": "Historial de creditos",
+      "currentBalance": "Saldo actual",
+      "ledgerEmpty": "No hay movimientos."
+    },
+    "automations": {
+      "pageTitle": "Bonos automaticos",
+      "pageDescription": "Crea reglas de creditos por hitos de compra del consumidor.",
+      "createTitle": "Crear regla",
+      "nameLabel": "Nombre de la regla",
+      "triggerTypeLabel": "Tipo de disparador",
+      "triggerWelcome": "Bienvenida (primera compra)",
+      "triggerNth": "Compra N",
+      "triggerSpend": "Umbral de gasto",
+      "triggerValueLabel": "Valor de disparador",
+      "rewardCreditsLabel": "Credito de recompensa ($)",
+      "activateAction": "Activar regla",
+      "createSuccess": "Regla creada.",
+      "createError": "No se pudo crear la regla.",
+      "rulesTitle": "Reglas activas",
+      "colName": "Nombre",
+      "colTrigger": "Disparador",
+      "colReward": "Recompensa",
+      "colStatus": "Estado",
+      "colCreated": "Creada",
+      "colActions": "Acciones",
+      "active": "Activa",
+      "paused": "Pausada",
+      "deactivateAction": "Desactivar",
+      "activateAgainAction": "Activar",
+      "rulesEmpty": "Aun no hay reglas automaticas."
+    },
+    "feedback": {
+      "pageTitle": "Panel de feedback",
+      "pageDescription": "Revisa calificaciones y responde comentarios de consumidores.",
+      "filterMachine": "Maquina",
+      "allMachines": "Todas las maquinas",
+      "filterRating": "Calificacion",
+      "allRatings": "Todas las calificaciones",
+      "filterFrom": "Desde",
+      "filterTo": "Hasta",
+      "applyFilters": "Aplicar",
+      "clearFilters": "Limpiar",
+      "machineSummaryTitle": "Promedio por maquina (Top 5)",
+      "productSummaryTitle": "Promedio por producto (Top 5)",
+      "summaryEmpty": "Sin datos para los filtros seleccionados.",
+      "tableTitle": "Feedback",
+      "dateCol": "Fecha",
+      "consumerCol": "Telefono consumidor",
+      "machineCol": "Maquina",
+      "productCol": "Producto",
+      "ratingCol": "Calificacion",
+      "commentCol": "Comentario",
+      "replyCol": "Respuesta",
+      "replyAction": "Responder",
+      "tableEmpty": "No hay feedback para mostrar.",
+      "replyModalTitle": "Responder al consumidor",
+      "replySubmit": "Enviar respuesta",
+      "replyCancel": "Cancelar",
+      "replySuccess": "Respuesta guardada.",
+      "replyError": "No se pudo guardar la respuesta."
+    }
   }
 }

@@ -11,6 +11,7 @@ import {
   Truck,
   Receipt,
   DollarSign,
+  Megaphone,
   BadgePercent,
   BarChart3,
   Settings,
@@ -35,6 +36,7 @@ const NAV_ITEMS: NavItem[] = [
   { key: 'restock', href: '/restock', icon: Truck, module: 'restock' },
   { key: 'transactions', href: '/transactions', icon: Receipt, module: 'transactions' },
   { key: 'financials', href: '/financials', icon: DollarSign, module: 'financials' },
+  { key: 'marketing', href: '/marketing', icon: Megaphone, module: 'marketing' },
   { key: 'discounts', href: '/discounts', icon: BadgePercent, module: 'discounts' },
   { key: 'analytics', href: '/analytics', icon: BarChart3, module: 'analytics' },
 ];

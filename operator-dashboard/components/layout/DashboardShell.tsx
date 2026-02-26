@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { LayoutDashboard, Server, Tag, Truck, BarChart3, X } from 'lucide-react';
+import EnableNotificationsBanner from '@/components/layout/EnableNotificationsBanner';
 import Sidebar from '@/components/layout/Sidebar';
 import TopBar from '@/components/layout/TopBar';
 
@@ -26,6 +27,12 @@ export default function DashboardShell({
   const tHelp = useTranslations('help');
   const isQrPrintPage = /^\/machines\/[^/]+\/qr$/.test(pathname);
   const isRestockSessionPage = pathname.startsWith('/restock/session');
+
+  useEffect(() => {
+    const openHelp = () => setHelpOpen(true);
+    window.addEventListener('maquinita:open-help', openHelp);
+    return () => window.removeEventListener('maquinita:open-help', openHelp);
+  }, []);
 
   const mobileTabs = [
     { key: 'dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -69,7 +76,10 @@ export default function DashboardShell({
 
       <TopBar operatorName={operatorName} onOpenMobileMenu={() => setMobileMenuOpen(true)} />
 
-      <main className="mx-auto w-full max-w-7xl px-4 pb-24 pt-4 lg:px-8 lg:pb-8">{children}</main>
+      <main className="mx-auto w-full max-w-7xl px-4 pb-24 pt-4 lg:px-8 lg:pb-8">
+        <EnableNotificationsBanner />
+        {children}
+      </main>
 
       <nav className="fixed bottom-0 left-0 right-0 z-30 border-t border-slate-200 bg-white lg:hidden">
         <div className="grid grid-cols-5">

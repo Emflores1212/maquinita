@@ -52,6 +52,7 @@ export default function NotificationBell() {
   const [open, setOpen] = useState(false);
   const [alerts, setAlerts] = useState<AlertRecord[]>([]);
   const [readIds, setReadIds] = useState<Set<string>>(new Set());
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (!operatorId) return;
@@ -87,6 +88,9 @@ export default function NotificationBell() {
             const oldRow = payload.old as AlertRecord;
 
             if (payload.eventType === 'INSERT') {
+              if (incoming.type === 'OFFLINE_SYNC') {
+                setToastMessage(incoming.message ?? t('offlineSyncToast'));
+              }
               const deduped = [incoming, ...prev.filter((item) => item.id !== incoming.id)];
               return deduped.slice(0, 20);
             }
@@ -108,7 +112,13 @@ export default function NotificationBell() {
     return () => {
       channel.unsubscribe();
     };
-  }, [operatorId]);
+  }, [operatorId, t]);
+
+  useEffect(() => {
+    if (!toastMessage) return;
+    const timeout = window.setTimeout(() => setToastMessage(null), 4500);
+    return () => window.clearTimeout(timeout);
+  }, [toastMessage]);
 
   const unreadCount = useMemo(() => alerts.filter((alert) => !readIds.has(alert.id)).length, [alerts, readIds]);
 
@@ -179,6 +189,12 @@ export default function NotificationBell() {
           )}
         </div>
       </aside>
+
+      {toastMessage ? (
+        <div className="fixed bottom-4 right-4 z-[60] max-w-sm rounded-xl border border-indigo-200 bg-white px-4 py-3 shadow-lg">
+          <p className="text-sm font-semibold text-indigo-800">{toastMessage}</p>
+        </div>
+      ) : null}
     </>
   );
 }

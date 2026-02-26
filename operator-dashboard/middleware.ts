@@ -10,6 +10,7 @@ const PROTECTED_PREFIXES = [
   '/restock',
   '/transactions',
   '/financials',
+  '/marketing',
   '/discounts',
   '/analytics',
   '/settings',

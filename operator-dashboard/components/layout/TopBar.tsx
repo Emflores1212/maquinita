@@ -13,6 +13,7 @@ function resolveTitle(pathname: string, tNav: (key: string) => string) {
   if (pathname.startsWith('/restock')) return tNav('restock');
   if (pathname.startsWith('/transactions')) return tNav('transactions');
   if (pathname.startsWith('/financials')) return tNav('financials');
+  if (pathname.startsWith('/marketing')) return tNav('marketing');
   if (pathname.startsWith('/discounts')) return tNav('discounts');
   if (pathname.startsWith('/analytics')) return tNav('analytics');
   if (pathname.startsWith('/settings')) return tNav('settings');

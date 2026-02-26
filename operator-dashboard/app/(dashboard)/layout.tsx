@@ -2,6 +2,8 @@ import { redirect } from 'next/navigation';
 import DashboardShell from '@/components/layout/DashboardShell';
 import { createServerClient } from '@/lib/supabase';
 
+export const dynamic = 'force-dynamic';
+
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const supabase = createServerClient();
   const {
