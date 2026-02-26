@@ -27,7 +27,7 @@ export async function POST(request: Request, context: { params: { id: string } }
   }
 
   const machineId = context.params.id;
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const { data: machineData } = await adminDb
     .from('machines')

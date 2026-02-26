@@ -36,9 +36,18 @@ type PurchaseTargetDraft = ConsumerFeedbackTarget & {
   createdAt: string;
 };
 
+type ConsumerProfileRow = {
+  id: string;
+  operator_id: string;
+  phone: string | null;
+  full_name: string | null;
+  credit_balance: number | null;
+  notification_opt_in: boolean | null;
+};
+
 export default async function ConsumerProfilePage({ params }: { params: { slug: string } }) {
   const supabase = createServerClient();
-  const db = supabase as any;
+  const db = supabase;
 
   const { data: operatorData } = await db.from('operators').select('id, slug').eq('slug', params.slug).maybeSingle();
   const operator = operatorData as { id: string; slug: string } | null;
@@ -55,14 +64,16 @@ export default async function ConsumerProfilePage({ params }: { params: { slug: 
     redirect(`/${params.slug}/login?returnUrl=/${params.slug}/profile`);
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
+  const adminDbAny = adminDb as any;
 
-  let { data: consumerProfileData } = await adminDb
+  const consumerProfileResult = await adminDbAny
     .from('consumer_profiles')
     .select('id, operator_id, phone, full_name, credit_balance, notification_opt_in')
     .eq('id', user.id)
     .eq('operator_id', operator.id)
     .maybeSingle();
+  let consumerProfileData = consumerProfileResult.data as ConsumerProfileRow | null;
 
   if (!consumerProfileData?.id) {
     const fallbackPhone = typeof user.phone === 'string' && user.phone.trim().length > 0 ? user.phone.trim() : null;
@@ -71,7 +82,7 @@ export default async function ConsumerProfilePage({ params }: { params: { slug: 
         ? user.user_metadata.full_name.trim()
         : null;
 
-    await adminDb.from('consumer_profiles').upsert(
+    await adminDbAny.from('consumer_profiles').upsert(
       {
         id: user.id,
         operator_id: operator.id,
@@ -81,24 +92,17 @@ export default async function ConsumerProfilePage({ params }: { params: { slug: 
       { onConflict: 'id' }
     );
 
-    const refreshed = await adminDb
+    const refreshed = await adminDbAny
       .from('consumer_profiles')
       .select('id, operator_id, phone, full_name, credit_balance, notification_opt_in')
       .eq('id', user.id)
       .eq('operator_id', operator.id)
       .maybeSingle();
 
-    consumerProfileData = refreshed.data;
+    consumerProfileData = refreshed.data as ConsumerProfileRow | null;
   }
 
-  const consumerProfile = consumerProfileData as {
-    id: string;
-    operator_id: string;
-    phone: string | null;
-    full_name: string | null;
-    credit_balance: number | null;
-    notification_opt_in: boolean | null;
-  } | null;
+  const consumerProfile = consumerProfileData;
 
   if (!consumerProfile?.id) {
     redirect(`/${params.slug}/login?returnUrl=/${params.slug}/profile`);
@@ -171,7 +175,7 @@ export default async function ConsumerProfilePage({ params }: { params: { slug: 
 
   const feedbackRows = purchaseTargets.length
     ? ((
-        (await adminDb
+        (await adminDbAny
           .from('consumer_feedback')
           .select('machine_id, product_id, created_at')
           .eq('operator_id', operator.id)

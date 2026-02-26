@@ -53,7 +53,7 @@ type Context =
 
 async function getContext(): Promise<Context> {
   const supabase = createServerClient();
-  const db = supabase as any;
+  const db = supabase;
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -120,7 +120,7 @@ export async function generateApiKeyAction(payload: z.infer<typeof generateApiKe
     return { ok: false as const, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   const raw = buildRawApiKey();
   const hash = await bcrypt.hash(raw, 10);
   const permissions = mapPermission(parsed.data.permission);
@@ -174,7 +174,7 @@ export async function revokeApiKeyAction(payload: z.infer<typeof revokeApiKeySch
   if (!ctx.ok) return { ok: false, error: ctx.error };
   if (!hasPermission(ctx.role, 'settings', 'w')) return { ok: false, error: 'Permission denied' };
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   const { error } = await adminDb
     .from('api_keys')
     .update({ is_active: false })
@@ -204,7 +204,7 @@ export async function createWebhookSubscriptionAction(payload: z.infer<typeof cr
   if (!ctx.ok) return { ok: false, error: ctx.error };
   if (!hasPermission(ctx.role, 'settings', 'w')) return { ok: false, error: 'Permission denied' };
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   const secret = `whsec_${crypto.randomUUID().replace(/-/g, '')}`;
   const events = [...new Set(parsed.data.events.map((event) => event.trim()).filter(Boolean))];
 
@@ -246,7 +246,7 @@ export async function updateWebhookSubscriptionStatusAction(payload: z.infer<typ
   if (!ctx.ok) return { ok: false, error: ctx.error };
   if (!hasPermission(ctx.role, 'settings', 'w')) return { ok: false, error: 'Permission denied' };
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   const { error } = await adminDb
     .from('webhook_subscriptions')
     .update({ is_active: parsed.data.isActive })
@@ -278,7 +278,7 @@ export async function testWebhookSubscriptionAction(payload: z.infer<typeof test
   if (!ctx.ok) return { ok: false as const, error: ctx.error };
   if (!hasPermission(ctx.role, 'settings', 'w')) return { ok: false as const, error: 'Permission denied' };
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   const { data: subData } = await adminDb
     .from('webhook_subscriptions')
     .select('id, operator_id, url, events, secret, is_active')
@@ -335,7 +335,7 @@ export async function retryWebhookDeliveryAction(payload: z.infer<typeof retryDe
   if (!ctx.ok) return { ok: false, error: ctx.error };
   if (!hasPermission(ctx.role, 'settings', 'w')) return { ok: false, error: 'Permission denied' };
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   const { data: deliveryData } = await adminDb
     .from('webhook_deliveries')
     .select('id, subscription_id')

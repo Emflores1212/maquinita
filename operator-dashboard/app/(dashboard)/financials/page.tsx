@@ -80,7 +80,7 @@ export default async function FinancialsPage({
   searchParams: Record<string, string | string[] | undefined>;
 }) {
   const supabase = createServerClient();
-  const db = supabase as any;
+  const db = supabase;
 
   const {
     data: { user },
@@ -96,6 +96,7 @@ export default async function FinancialsPage({
   if (!profile?.operator_id || !hasPermission(profile.role, 'financials', 'r')) {
     redirect('/dashboard');
   }
+  const operatorId = profile.operator_id as string;
 
   const period = parsePeriod(asSingleParam(searchParams.period));
   const metric = parseMetric(asSingleParam(searchParams.metric));
@@ -107,11 +108,11 @@ export default async function FinancialsPage({
   const previousRange = resolvePreviousPeriodRange(currentRange.start, currentRange.end);
 
   const [{ data: operatorData }, { data: machinesData }] = await Promise.all([
-    db.from('operators').select('id, settings').eq('id', profile.operator_id).maybeSingle(),
+    db.from('operators').select('id, settings').eq('id', operatorId).maybeSingle(),
     db
       .from('machines')
       .select('id, name, settings')
-      .eq('operator_id', profile.operator_id)
+      .eq('operator_id', operatorId)
       .neq('status', 'archived')
       .order('name', { ascending: true }),
   ]);
@@ -133,7 +134,7 @@ export default async function FinancialsPage({
     let query = db
       .from('transactions')
       .select('id, machine_id, amount, refund_amount, tax_amount, created_at')
-      .eq('operator_id', profile.operator_id)
+      .eq('operator_id', operatorId)
       .in('status', ['completed', 'refunded'])
       .gte('created_at', startISO)
       .lte('created_at', endISO);

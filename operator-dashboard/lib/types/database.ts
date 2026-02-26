@@ -309,6 +309,53 @@ export type Database = {
           created_at?: string | null;
         };
       };
+      restock_sessions: {
+        Row: {
+          id: string;
+          operator_id: string;
+          machine_id: string;
+          started_by: string | null;
+          started_at: string | null;
+          completed_at: string | null;
+          status: string | null;
+          items_added: Json | null;
+          items_removed: Json | null;
+          physical_counts: Json | null;
+          notes: string | null;
+          photo_urls: string[] | null;
+          discrepancy_count: number | null;
+        };
+        Insert: {
+          id?: string;
+          operator_id: string;
+          machine_id: string;
+          started_by?: string | null;
+          started_at?: string | null;
+          completed_at?: string | null;
+          status?: string | null;
+          items_added?: Json | null;
+          items_removed?: Json | null;
+          physical_counts?: Json | null;
+          notes?: string | null;
+          photo_urls?: string[] | null;
+          discrepancy_count?: number | null;
+        };
+        Update: {
+          id?: string;
+          operator_id?: string;
+          machine_id?: string;
+          started_by?: string | null;
+          started_at?: string | null;
+          completed_at?: string | null;
+          status?: string | null;
+          items_added?: Json | null;
+          items_removed?: Json | null;
+          physical_counts?: Json | null;
+          notes?: string | null;
+          photo_urls?: string[] | null;
+          discrepancy_count?: number | null;
+        };
+      };
       transactions: {
         Row: {
           id: string;

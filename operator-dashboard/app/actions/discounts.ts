@@ -74,7 +74,7 @@ type ActionResult = {
 
 async function getOperatorContext() {
   const supabase = createServerClient();
-  const db = supabase as any;
+  const db = supabase;
 
   const {
     data: { user },
@@ -230,7 +230,7 @@ export async function createDiscountAction(payload: z.infer<typeof createDiscoun
     }
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   const targetsValidation = await validateTargets(adminDb, ctx.operatorId, {
     productIds: parsed.data.targetProductIds,
     categoryIds: parsed.data.targetCategoryIds,
@@ -319,7 +319,7 @@ export async function updateDiscountAction(payload: z.infer<typeof updateDiscoun
     return { ok: false, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const { data: existingData } = await adminDb
     .from('discounts')
@@ -451,7 +451,7 @@ export async function endDiscountAction(payload: z.infer<typeof endDiscountSchem
     return { ok: false, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   const nowIso = new Date().toISOString();
 
   const { error: updateError } = await adminDb
@@ -504,7 +504,7 @@ export async function createExpirationRuleAction(payload: z.infer<typeof createE
     return { ok: false, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const targetsValidation = await validateTargets(adminDb, ctx.operatorId, {
     productIds: parsed.data.targetProductIds,
@@ -568,7 +568,7 @@ export async function toggleExpirationRuleAction(payload: z.infer<typeof toggleE
     return { ok: false, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const { error: updateError } = await adminDb
     .from('expiration_rules')

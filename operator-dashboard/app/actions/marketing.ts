@@ -114,7 +114,7 @@ function normalizeIso(value: string | null | undefined): string | null {
 
 async function getMarketingContext(): Promise<MarketingContext> {
   const supabase = createServerClient();
-  const db = supabase as any;
+  const db = supabase;
 
   const {
     data: { user },
@@ -131,7 +131,7 @@ async function getMarketingContext(): Promise<MarketingContext> {
     return { ok: false, error: 'Invalid operator context' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   const { data: operatorData } = await adminDb
     .from('operators')
     .select('slug, name')
@@ -193,7 +193,7 @@ export async function createNotificationSendAction(payload: z.infer<typeof notif
     return { ok: false, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   if (parsed.data.machineId) {
     const { data: machineData } = await adminDb
@@ -283,7 +283,7 @@ export async function searchConsumersByPhoneAction(payload: z.infer<typeof searc
     return { ok: false as const, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   const { data: consumersData, error: consumersError } = await adminDb
     .from('consumer_profiles')
     .select('id, full_name, phone, credit_balance')
@@ -344,7 +344,7 @@ export async function getConsumerCreditLedgerAction(payload: z.infer<typeof ledg
     return { ok: false as const, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const { data: consumerData } = await adminDb
     .from('consumer_profiles')
@@ -403,7 +403,7 @@ export async function awardCreditsAction(payload: z.infer<typeof awardCreditsSch
     return { ok: false, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const { data: consumerData } = await adminDb
     .from('consumer_profiles')
@@ -492,7 +492,7 @@ export async function createAutomationRuleAction(payload: z.infer<typeof automat
     return { ok: false, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   const triggerValue = parsed.data.triggerType === 'welcome' ? null : parsed.data.triggerValue ?? null;
 
   const { data: insertData, error: insertError } = await adminDb
@@ -542,7 +542,7 @@ export async function toggleAutomationRuleAction(payload: z.infer<typeof toggleA
     return { ok: false, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const { error } = await adminDb
     .from('automation_rules')
@@ -583,7 +583,7 @@ export async function replyConsumerFeedbackAction(payload: z.infer<typeof replyF
     return { ok: false, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const { error } = await adminDb
     .from('consumer_feedback')

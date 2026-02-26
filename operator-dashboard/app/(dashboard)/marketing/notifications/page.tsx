@@ -7,7 +7,7 @@ import { createServerClient } from '@/lib/supabase';
 export default async function MarketingNotificationsPage() {
   const t = await getTranslations('marketing.notifications');
   const supabase = createServerClient();
-  const db = supabase as any;
+  const db = supabase;
 
   const {
     data: { user },

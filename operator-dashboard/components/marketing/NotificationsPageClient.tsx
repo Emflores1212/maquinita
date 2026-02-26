@@ -4,6 +4,7 @@ import { useMemo, useState, useTransition } from 'react';
 import { Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { createNotificationSendAction } from '@/app/actions/marketing';
+import { formatDateTime } from '@/lib/format';
 
 type MachineOption = {
   id: string;
@@ -20,13 +21,6 @@ type NotificationHistoryRow = {
   scheduledFor: string | null;
   createdAt: string;
 };
-
-function formatDateTime(value: string | null) {
-  if (!value) return '-';
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return '-';
-  return date.toLocaleString();
-}
 
 function targetLabel(target: Record<string, unknown>, machineNameById: Map<string, string>, t: (key: string) => string) {
   const type = typeof target.type === 'string' ? target.type : 'all';

@@ -11,7 +11,7 @@ export async function GET(request: Request, context: { params: { id: string } })
   }
 
   const machineId = context.params.id;
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const { data: machineData, error: machineError } = await adminDb
     .from('machines')

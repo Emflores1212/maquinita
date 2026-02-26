@@ -15,6 +15,7 @@ import {
   YAxis,
 } from 'recharts';
 import { ArrowDown, ArrowUp, Crown, Download } from 'lucide-react';
+import { formatMoney, formatPercent } from '@/lib/format';
 import {
   getWasteColorClass,
   serializeMachineAnalyticsCsv,
@@ -86,22 +87,6 @@ type AnalyticsDashboardClientProps = {
   profitabilityRows: ProfitabilityRow[];
   lowMarginMachineNames: string[];
 };
-
-function money(value: number, locale: string) {
-  return new Intl.NumberFormat(locale || 'en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-  }).format(value);
-}
-
-function percent(value: number, locale: string) {
-  return new Intl.NumberFormat(locale || 'en-US', {
-    style: 'percent',
-    minimumFractionDigits: 1,
-    maximumFractionDigits: 1,
-  }).format(value / 100);
-}
 
 function downloadCsv(contents: string, filename: string) {
   const blob = new Blob([contents], { type: 'text/csv;charset=utf-8;' });
@@ -300,7 +285,7 @@ export default function AnalyticsDashboardClient({
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
             <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
               <p className="text-xs font-semibold uppercase text-slate-500">{t('kpis.revenue')}</p>
-              <p className="mt-2 text-2xl font-bold text-slate-900">{money(kpis.revenue, locale)}</p>
+              <p className="mt-2 text-2xl font-bold text-slate-900">{formatMoney(kpis.revenue, locale)}</p>
               <p className={`mt-2 flex items-center gap-1 text-xs font-semibold ${deltaClasses(deltas.revenue)}`}>
                 {deltas.revenue.trend === 'up' ? <ArrowUp className="h-3.5 w-3.5" /> : <ArrowDown className="h-3.5 w-3.5" />}
                 {deltas.revenue.percent === null ? t('kpis.noBaseline') : `${deltas.revenue.percent.toFixed(1)}%`}
@@ -318,7 +303,7 @@ export default function AnalyticsDashboardClient({
 
             <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
               <p className="text-xs font-semibold uppercase text-slate-500">{t('kpis.aov')}</p>
-              <p className="mt-2 text-2xl font-bold text-slate-900">{money(kpis.aov, locale)}</p>
+              <p className="mt-2 text-2xl font-bold text-slate-900">{formatMoney(kpis.aov, locale)}</p>
               <p className={`mt-2 flex items-center gap-1 text-xs font-semibold ${deltaClasses(deltas.aov)}`}>
                 {deltas.aov.trend === 'up' ? <ArrowUp className="h-3.5 w-3.5" /> : <ArrowDown className="h-3.5 w-3.5" />}
                 {deltas.aov.percent === null ? t('kpis.noBaseline') : `${deltas.aov.percent.toFixed(1)}%`}
@@ -327,7 +312,7 @@ export default function AnalyticsDashboardClient({
 
             <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
               <p className="text-xs font-semibold uppercase text-slate-500">{t('kpis.wasteRate')}</p>
-              <p className="mt-2 text-2xl font-bold text-slate-900">{percent(kpis.wasteRate, locale)}</p>
+              <p className="mt-2 text-2xl font-bold text-slate-900">{formatPercent(kpis.wasteRate, locale)}</p>
               <p className={`mt-2 flex items-center gap-1 text-xs font-semibold ${deltaClasses(deltas.wasteRate)}`}>
                 {deltas.wasteRate.trend === 'up' ? <ArrowUp className="h-3.5 w-3.5" /> : <ArrowDown className="h-3.5 w-3.5" />}
                 {deltas.wasteRate.percent === null ? t('kpis.noBaseline') : `${deltas.wasteRate.percent.toFixed(1)}%`}
@@ -347,7 +332,7 @@ export default function AnalyticsDashboardClient({
                     formatter={(value: number | string | undefined, dataKey: string | undefined) => {
                       const numeric = Number(value ?? 0);
                       if (dataKey === 'transactions') return [String(Math.round(numeric)), t('chart.transactions')];
-                      return [money(numeric, locale), dataKey === 'netToOperator' ? t('chart.net') : chartTooltipLabel];
+                      return [formatMoney(numeric, locale), dataKey === 'netToOperator' ? t('chart.net') : chartTooltipLabel];
                     }}
                   />
                   <Area type="monotone" dataKey={metricDataKey} stroke="#0D2B4E" fill="#0D2B4E" fillOpacity={0.18} />
@@ -417,10 +402,10 @@ export default function AnalyticsDashboardClient({
                           <p className="text-xs text-slate-500">{row.categoryName}</p>
                         </td>
                         <td className="px-2 py-2 text-slate-700">{row.unitsSold.toLocaleString(locale)}</td>
-                        <td className="px-2 py-2 text-slate-700">{money(row.revenue, locale)}</td>
-                        <td className="px-2 py-2 text-slate-700">{percent(row.sellThroughPct, locale)}</td>
+                        <td className="px-2 py-2 text-slate-700">{formatMoney(row.revenue, locale)}</td>
+                        <td className="px-2 py-2 text-slate-700">{formatPercent(row.sellThroughPct, locale)}</td>
                         <td className="px-2 py-2 text-slate-700">{row.wasted.toLocaleString(locale)}</td>
-                        <td className={`px-2 py-2 font-semibold ${getWasteColorClass(row.wastePct)}`}>{percent(row.wastePct, locale)}</td>
+                        <td className={`px-2 py-2 font-semibold ${getWasteColorClass(row.wastePct)}`}>{formatPercent(row.wastePct, locale)}</td>
                       </tr>
                     ))
                   )}
@@ -438,7 +423,7 @@ export default function AnalyticsDashboardClient({
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="machineName" />
                   <YAxis tickFormatter={(value) => `$${Number(value).toFixed(0)}`} />
-                  <Tooltip formatter={(value: number | string | undefined) => money(Number(value ?? 0), locale)} />
+                  <Tooltip formatter={(value: number | string | undefined) => formatMoney(Number(value ?? 0), locale)} />
                   <Bar dataKey="revenue" fill="#0D2B4E" radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -473,11 +458,11 @@ export default function AnalyticsDashboardClient({
                             {row.machineName}
                           </span>
                         </td>
-                        <td className="px-2 py-2 text-slate-700">{money(row.revenue, locale)}</td>
+                        <td className="px-2 py-2 text-slate-700">{formatMoney(row.revenue, locale)}</td>
                         <td className="px-2 py-2 text-slate-700">{row.transactions.toLocaleString(locale)}</td>
-                        <td className="px-2 py-2 text-slate-700">{money(row.aov, locale)}</td>
+                        <td className="px-2 py-2 text-slate-700">{formatMoney(row.aov, locale)}</td>
                         <td className="px-2 py-2 text-slate-700">{row.topProduct}</td>
-                        <td className={`px-2 py-2 font-semibold ${getWasteColorClass(row.wastePct)}`}>{percent(row.wastePct, locale)}</td>
+                        <td className={`px-2 py-2 font-semibold ${getWasteColorClass(row.wastePct)}`}>{formatPercent(row.wastePct, locale)}</td>
                         <td className="px-2 py-2 text-slate-700">#{row.rank}</td>
                       </tr>
                     ))
@@ -624,16 +609,16 @@ export default function AnalyticsDashboardClient({
                   profitabilityRows.map((row) => (
                     <tr key={row.machineId} className="border-b border-slate-100">
                       <td className="px-2 py-2 font-semibold text-slate-800">{row.machineName}</td>
-                      <td className="px-2 py-2 text-slate-700">{money(row.revenue, locale)}</td>
-                      <td className="px-2 py-2 text-slate-700">{money(row.estimatedCogs, locale)}</td>
-                      <td className="px-2 py-2 text-slate-700">{money(row.grossMargin, locale)}</td>
-                      <td className="px-2 py-2 text-slate-700">{money(row.platformFee, locale)}</td>
-                      <td className="px-2 py-2 text-slate-700">{money(row.stripeFeeEstimate, locale)}</td>
-                      <td className="px-2 py-2 text-slate-700">{money(row.refunds, locale)}</td>
-                      <td className="px-2 py-2 text-slate-900 font-semibold">{money(row.netToOperator, locale)}</td>
-                      <td className="px-2 py-2 text-slate-700">{percent(row.grossMarginPct, locale)}</td>
+                      <td className="px-2 py-2 text-slate-700">{formatMoney(row.revenue, locale)}</td>
+                      <td className="px-2 py-2 text-slate-700">{formatMoney(row.estimatedCogs, locale)}</td>
+                      <td className="px-2 py-2 text-slate-700">{formatMoney(row.grossMargin, locale)}</td>
+                      <td className="px-2 py-2 text-slate-700">{formatMoney(row.platformFee, locale)}</td>
+                      <td className="px-2 py-2 text-slate-700">{formatMoney(row.stripeFeeEstimate, locale)}</td>
+                      <td className="px-2 py-2 text-slate-700">{formatMoney(row.refunds, locale)}</td>
+                      <td className="px-2 py-2 text-slate-900 font-semibold">{formatMoney(row.netToOperator, locale)}</td>
+                      <td className="px-2 py-2 text-slate-700">{formatPercent(row.grossMarginPct, locale)}</td>
                       <td className={`px-2 py-2 font-semibold ${row.netMarginPct < 15 ? 'text-amber-700' : 'text-emerald-700'}`}>
-                        {percent(row.netMarginPct, locale)}
+                        {formatPercent(row.netMarginPct, locale)}
                       </td>
                       <td className="px-2 py-2">
                         <span

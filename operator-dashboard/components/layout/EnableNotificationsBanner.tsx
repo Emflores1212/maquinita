@@ -1,24 +1,12 @@
 'use client';
 
-import { useEffect, useMemo, useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { BellRing } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/components/providers/AuthProvider';
+import { getCurrentPushSubscription, isPushSupported, subscribeToPush } from '@/lib/push-client';
 
 const BANNER_DISMISSED_KEY = 'maquinita_notifications_banner_dismissed';
-
-function base64UrlToUint8Array(base64String: string) {
-  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-  const rawData = window.atob(base64);
-  const outputArray = new Uint8Array(rawData.length);
-
-  for (let i = 0; i < rawData.length; i += 1) {
-    outputArray[i] = rawData.charCodeAt(i);
-  }
-
-  return outputArray;
-}
 
 export default function EnableNotificationsBanner() {
   const t = useTranslations('notifications.banner');
@@ -29,13 +17,10 @@ export default function EnableNotificationsBanner() {
   const [feedback, setFeedback] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  const isSupported = useMemo(() => {
-    if (typeof window === 'undefined') return false;
-    return 'Notification' in window && 'serviceWorker' in navigator && 'PushManager' in window;
-  }, []);
+  const supported = isPushSupported();
 
   useEffect(() => {
-    if (!isSupported) return;
+    if (!supported) return;
     setIsDismissed(window.localStorage.getItem(BANNER_DISMISSED_KEY) === '1');
     setPermission(Notification.permission);
 
@@ -43,8 +28,7 @@ export default function EnableNotificationsBanner() {
 
     const checkExistingSubscription = async () => {
       try {
-        const registration = await navigator.serviceWorker.getRegistration();
-        const subscription = await registration?.pushManager.getSubscription();
+        const subscription = await getCurrentPushSubscription();
 
         if (!cancelled) {
           setIsEnabled(Boolean(subscription));
@@ -61,9 +45,9 @@ export default function EnableNotificationsBanner() {
     return () => {
       cancelled = true;
     };
-  }, [isSupported]);
+  }, [supported]);
 
-  if (!isSupported || !user || !operatorId || permission === 'denied' || isEnabled || isDismissed) {
+  if (!supported || !user || !operatorId || permission === 'denied' || isEnabled || isDismissed) {
     return null;
   }
 
@@ -91,15 +75,7 @@ export default function EnableNotificationsBanner() {
           return;
         }
 
-        const registration = await navigator.serviceWorker.register('/sw.js');
-        let subscription = await registration.pushManager.getSubscription();
-
-        if (!subscription) {
-          subscription = await registration.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: base64UrlToUint8Array(vapidPublicKey),
-          });
-        }
+        const subscription = await subscribeToPush(vapidPublicKey);
 
         const response = await fetch('/api/push/subscribe', {
           method: 'POST',

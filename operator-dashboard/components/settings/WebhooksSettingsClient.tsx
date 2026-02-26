@@ -9,6 +9,7 @@ import {
   testWebhookSubscriptionAction,
   updateWebhookSubscriptionStatusAction,
 } from '@/app/actions/api-access';
+import { formatDateTime } from '@/lib/format';
 
 type WebhookSubscriptionRow = {
   id: string;
@@ -36,13 +37,6 @@ const EVENT_OPTIONS = [
   'inventory.low_stock',
   'restock.completed',
 ] as const;
-
-function formatDate(value: string | null) {
-  if (!value) return '-';
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return '-';
-  return date.toLocaleString();
-}
 
 export default function WebhooksSettingsClient({
   subscriptions,
@@ -222,7 +216,7 @@ export default function WebhooksSettingsClient({
                     {subscription.isActive ? 'active' : 'inactive'}
                   </span>
                 </td>
-                <td className="px-3 py-2 text-slate-600">{formatDate(subscription.createdAt)}</td>
+                <td className="px-3 py-2 text-slate-600">{formatDateTime(subscription.createdAt)}</td>
                 <td className="px-3 py-2">
                   <div className="flex gap-2">
                     <button
@@ -274,9 +268,9 @@ export default function WebhooksSettingsClient({
               <tr key={delivery.id} className="border-b border-slate-100">
                 <td className="px-3 py-2 text-slate-700">{delivery.event ?? '-'}</td>
                 <td className="px-3 py-2 text-slate-700">{delivery.status ?? '-'}</td>
-                <td className="px-3 py-2 text-slate-600">{formatDate(delivery.createdAt)}</td>
+                <td className="px-3 py-2 text-slate-600">{formatDateTime(delivery.createdAt)}</td>
                 <td className="px-3 py-2 text-slate-600">{delivery.attemptCount}</td>
-                <td className="px-3 py-2 text-slate-600">{formatDate(delivery.nextRetryAt)}</td>
+                <td className="px-3 py-2 text-slate-600">{formatDateTime(delivery.nextRetryAt)}</td>
                 <td className="px-3 py-2">
                   <button
                     type="button"

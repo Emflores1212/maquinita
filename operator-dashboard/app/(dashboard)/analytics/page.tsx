@@ -85,7 +85,7 @@ export default async function AnalyticsPage({
   searchParams: Record<string, string | string[] | undefined>;
 }) {
   const supabase = createServerClient();
-  const db = supabase as any;
+  const db = supabase;
 
   const {
     data: { user },
@@ -101,6 +101,7 @@ export default async function AnalyticsPage({
   if (!profile?.operator_id || !hasPermission(profile.role, 'analytics', 'r')) {
     redirect('/dashboard');
   }
+  const operatorId = profile.operator_id as string;
 
   const period = parseAnalyticsPeriod(asSingleParam(searchParams.period));
   const metric = parseAnalyticsMetric(asSingleParam(searchParams.metric));
@@ -115,16 +116,16 @@ export default async function AnalyticsPage({
   const previousRange = resolvePreviousPeriodRange(currentRange.start, currentRange.end);
 
   const [operatorData, machinesData, productsData, categoriesData, cogsData] = await Promise.all([
-    db.from('operators').select('id, settings').eq('id', profile.operator_id).maybeSingle(),
+    db.from('operators').select('id, settings').eq('id', operatorId).maybeSingle(),
     db
       .from('machines')
       .select('id, name, status')
-      .eq('operator_id', profile.operator_id)
+      .eq('operator_id', operatorId)
       .neq('status', 'archived')
       .order('name', { ascending: true }),
-    db.from('products').select('id, name, category_id').eq('operator_id', profile.operator_id).order('name', { ascending: true }),
-    db.from('product_categories').select('id, name').eq('operator_id', profile.operator_id).order('name', { ascending: true }),
-    db.from('cogs_settings').select('id, product_id, category_id, cogs_percentage').eq('operator_id', profile.operator_id),
+    db.from('products').select('id, name, category_id').eq('operator_id', operatorId).order('name', { ascending: true }),
+    db.from('product_categories').select('id, name').eq('operator_id', operatorId).order('name', { ascending: true }),
+    db.from('cogs_settings').select('id, product_id, category_id, cogs_percentage').eq('operator_id', operatorId),
   ]);
 
   const operator = operatorData.data as { id: string; settings: Json | null } | null;
@@ -165,7 +166,7 @@ export default async function AnalyticsPage({
     let query = db
       .from('daily_rollups')
       .select('machine_id, product_id, date, units_sold, revenue, refunds, units_wasted, transactions_count')
-      .eq('operator_id', profile.operator_id)
+      .eq('operator_id', operatorId)
       .gte('date', startDate)
       .lte('date', endDate);
 
@@ -203,7 +204,7 @@ export default async function AnalyticsPage({
       let query = db
         .from('restock_sessions')
         .select('machine_id, completed_at, physical_counts')
-        .eq('operator_id', profile.operator_id)
+        .eq('operator_id', operatorId)
         .eq('status', 'completed')
         .gte('completed_at', currentRange.start.toISOString())
         .lte('completed_at', currentRange.end.toISOString())

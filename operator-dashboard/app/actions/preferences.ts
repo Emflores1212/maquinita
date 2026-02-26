@@ -9,7 +9,7 @@ export async function updateLanguage(language: string): Promise<{ ok: boolean; e
   const locale = normalizeLocale(language) as SupportedLocale;
 
   const supabase = createServerClient();
-  const db = supabase as any;
+  const db = supabase;
   const {
     data: { user }
   } = await supabase.auth.getUser();
@@ -18,7 +18,7 @@ export async function updateLanguage(language: string): Promise<{ ok: boolean; e
     return { ok: false, error: 'Not authenticated' };
   }
 
-  const { error } = await db.from('profiles').update({ preferred_language: locale }).eq('id', user.id);
+  const { error } = await (db as any).from('profiles').update({ preferred_language: locale }).eq('id', user.id);
 
   if (error) {
     return { ok: false, error: 'Failed to update language' };

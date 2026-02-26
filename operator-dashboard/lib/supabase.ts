@@ -1,7 +1,38 @@
 import { createBrowserClient as createSSRBrowserClient, createServerClient as createSSRServerClient } from '@supabase/ssr';
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
-import type { Database } from '@/lib/types';
+import type { Database as RawDatabase } from '@/lib/types';
+
+type AddRelationshipsToTables<Tables> = {
+  [K in keyof Tables]: Tables[K] extends { Row: infer Row; Insert: infer Insert; Update: infer Update }
+    ? {
+        Row: Row;
+        Insert: Insert;
+        Update: Update;
+        Relationships: [];
+      }
+    : Tables[K];
+};
+
+type AdaptSchema<Schema> = Schema extends {
+  Tables: infer Tables;
+  Views: infer Views;
+  Functions: infer Functions;
+  Enums: infer Enums;
+  CompositeTypes: infer CompositeTypes;
+}
+  ? {
+      Tables: AddRelationshipsToTables<Tables>;
+      Views: Views;
+      Functions: Functions;
+      Enums: Enums;
+      CompositeTypes: CompositeTypes;
+    }
+  : Schema;
+
+type SupabaseDatabase = {
+  [SchemaName in keyof RawDatabase]: AdaptSchema<RawDatabase[SchemaName]>;
+};
 
 function getEnvVar(name: 'NEXT_PUBLIC_SUPABASE_URL' | 'NEXT_PUBLIC_SUPABASE_ANON_KEY' | 'SUPABASE_SERVICE_ROLE_KEY'): string {
   const value =
@@ -19,7 +50,7 @@ function getEnvVar(name: 'NEXT_PUBLIC_SUPABASE_URL' | 'NEXT_PUBLIC_SUPABASE_ANON
 const supabaseUrl = () => getEnvVar('NEXT_PUBLIC_SUPABASE_URL');
 const supabaseAnonKey = () => getEnvVar('NEXT_PUBLIC_SUPABASE_ANON_KEY');
 
-let browserClient: ReturnType<typeof createSSRBrowserClient<Database>> | undefined;
+let browserClient: ReturnType<typeof createSSRBrowserClient<SupabaseDatabase>> | undefined;
 
 export function createBrowserClient() {
   if (typeof window === 'undefined') {
@@ -27,7 +58,7 @@ export function createBrowserClient() {
   }
 
   if (!browserClient) {
-    browserClient = createSSRBrowserClient<Database>(supabaseUrl(), supabaseAnonKey());
+    browserClient = createSSRBrowserClient<SupabaseDatabase>(supabaseUrl(), supabaseAnonKey());
   }
 
   return browserClient;
@@ -36,7 +67,7 @@ export function createBrowserClient() {
 export function createServerClient() {
   const cookieStore = cookies();
 
-  return createSSRServerClient<Database>(supabaseUrl(), supabaseAnonKey(), {
+  return createSSRServerClient<SupabaseDatabase>(supabaseUrl(), supabaseAnonKey(), {
     cookies: {
       getAll() {
         return cookieStore.getAll();
@@ -55,7 +86,7 @@ export function createServerClient() {
 export function createRouteHandlerClient() {
   const cookieStore = cookies();
 
-  return createSSRServerClient<Database>(supabaseUrl(), supabaseAnonKey(), {
+  return createSSRServerClient<SupabaseDatabase>(supabaseUrl(), supabaseAnonKey(), {
     cookies: {
       getAll() {
         return cookieStore.getAll();
@@ -72,7 +103,7 @@ export function createAdminClient() {
     throw new Error('createAdminClient() cannot be called from browser/client runtime.');
   }
 
-  return createClient<Database>(supabaseUrl(), getEnvVar('SUPABASE_SERVICE_ROLE_KEY'), {
+  return createClient<SupabaseDatabase>(supabaseUrl(), getEnvVar('SUPABASE_SERVICE_ROLE_KEY'), {
     auth: {
       persistSession: false,
       autoRefreshToken: false,

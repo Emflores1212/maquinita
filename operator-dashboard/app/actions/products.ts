@@ -156,7 +156,7 @@ function buildNutritional(value?: z.infer<typeof nutritionalSchema>): Json {
 
 async function getOperatorContext(): Promise<OperatorContext> {
   const supabase = createServerClient();
-  const db = supabase as any;
+  const db = supabase;
 
   const {
     data: { user },
@@ -236,7 +236,7 @@ export async function upsertProductAction(payload: z.infer<typeof upsertProductS
     return { ok: false, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   const data = parsed.data;
 
   if (data.categoryId) {
@@ -356,7 +356,7 @@ export async function updateProductPhotoAction(payload: z.infer<typeof updatePho
     return { ok: false, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const { data: existing } = await adminDb
     .from('products')
@@ -411,7 +411,7 @@ export async function createProductCategoryAction(payload: z.infer<typeof create
     return { ok: false as const, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   const categoryName = parsed.data.name.trim();
   const categoryColor = parsed.data.color ?? '#6B7280';
 
@@ -494,7 +494,7 @@ export async function archiveProduct(payload: z.infer<typeof archiveProductSchem
     return { ok: false, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const { data: product } = await adminDb
     .from('products')
@@ -626,7 +626,7 @@ export async function importProductsAction(payload: z.infer<typeof importProduct
     return { ok: false, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   const skippedRows: ImportSkippedRow[] = [];
   let importedCount = 0;
 

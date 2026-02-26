@@ -11,7 +11,7 @@ export async function GET(request: Request, context: { params: { id: string } })
   }
 
   const transactionId = context.params.id;
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const { data: txData, error: txError } = await adminDb
     .from('transactions')

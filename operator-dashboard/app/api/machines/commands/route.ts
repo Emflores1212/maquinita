@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
+import { getAuthorizedMachineByMid, resolveMachineApiKey } from '@/lib/machine-auth';
 import { createAdminClient } from '@/lib/supabase';
 
 export const runtime = 'nodejs';
@@ -11,43 +12,6 @@ const commandUpdateSchema = z.object({
   event: z.enum(['acknowledged', 'executed', 'failed']),
   errorMessage: z.string().trim().max(500).optional(),
 });
-
-function resolveMachineApiKey(request: Request) {
-  const authHeader = request.headers.get('authorization') ?? request.headers.get('Authorization');
-  if (authHeader) {
-    const [scheme, token] = authHeader.split(' ');
-    if (scheme?.toLowerCase() === 'bearer' && token?.trim()) {
-      return token.trim();
-    }
-  }
-
-  const fallback = request.headers.get('x-machine-api-key');
-  return fallback?.trim() ?? null;
-}
-
-async function getAuthorizedMachine(adminDb: any, mid: string, machineApiKey: string) {
-  const { data: machineData } = await adminDb
-    .from('machines')
-    .select('id, operator_id, api_key, mid, settings')
-    .eq('mid', mid)
-    .maybeSingle();
-
-  const machine = machineData as
-    | {
-        id: string;
-        operator_id: string;
-        api_key: string | null;
-        mid: string;
-        settings: Record<string, unknown> | null;
-      }
-    | null;
-
-  if (!machine?.id || !machine.operator_id || !machine.api_key || machine.api_key !== machineApiKey) {
-    return null;
-  }
-
-  return machine;
-}
 
 export async function GET(request: Request) {
   const machineApiKey = resolveMachineApiKey(request);
@@ -62,8 +26,8 @@ export async function GET(request: Request) {
     return NextResponse.json({ ok: false, error: 'Missing mid query parameter' }, { status: 400 });
   }
 
-  const adminDb = createAdminClient() as any;
-  const machine = await getAuthorizedMachine(adminDb, mid, machineApiKey);
+  const adminDb = createAdminClient();
+  const machine = await getAuthorizedMachineByMid(adminDb, { mid, machineApiKey });
 
   if (!machine) {
     return NextResponse.json({ ok: false, error: 'Unauthorized machine credentials' }, { status: 401 });
@@ -110,8 +74,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: 'Invalid command update payload' }, { status: 400 });
   }
 
-  const adminDb = createAdminClient() as any;
-  const machine = await getAuthorizedMachine(adminDb, parsed.data.mid, machineApiKey);
+  const adminDb = createAdminClient();
+  const machine = await getAuthorizedMachineByMid(adminDb, { mid: parsed.data.mid, machineApiKey });
 
   if (!machine) {
     return NextResponse.json({ ok: false, error: 'Unauthorized machine credentials' }, { status: 401 });
@@ -187,8 +151,12 @@ export async function POST(request: Request) {
 
   if (event === 'executed' && (command.type === 'LOCKDOWN' || command.type === 'UNLOCK')) {
     const nextLockState = command.type === 'LOCKDOWN' ? 'locked' : 'unlocked';
+    const currentSettings =
+      machine.settings && typeof machine.settings === 'object' && !Array.isArray(machine.settings)
+        ? (machine.settings as Record<string, unknown>)
+        : {};
     const nextSettings = {
-      ...(machine.settings ?? {}),
+      ...currentSettings,
       lockState: nextLockState,
     };
 

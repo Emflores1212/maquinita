@@ -22,7 +22,7 @@ type ActionResult = {
 
 async function getOperatorContext() {
   const supabase = createServerClient();
-  const db = supabase as any;
+  const db = supabase;
 
   const {
     data: { user },
@@ -89,14 +89,15 @@ export async function issueCommand(input: z.infer<typeof issueCommandSchema>): P
   if (!hasPermission(ctx.profile.role, 'machines', 'w')) {
     return { ok: false, error: 'Permission denied' };
   }
+  const operatorId = ctx.profile.operator_id as string;
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const { data: machineData } = await adminDb
     .from('machines')
     .select('id, operator_id, name, type, settings')
     .eq('id', parsed.data.machineId)
-    .eq('operator_id', ctx.profile.operator_id)
+    .eq('operator_id', operatorId)
     .maybeSingle();
 
   const machine = machineData as
@@ -138,7 +139,7 @@ export async function issueCommand(input: z.infer<typeof issueCommandSchema>): P
     .from('machine_commands')
     .insert({
       machine_id: machine.id,
-      operator_id: ctx.profile.operator_id,
+      operator_id: operatorId,
       issued_by: ctx.user.id,
       type: parsed.data.type,
       payload,

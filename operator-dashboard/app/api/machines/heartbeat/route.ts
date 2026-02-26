@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createAlert, resolveOpenAlert } from '@/lib/alerts';
+import { getAuthorizedMachineByMid, resolveMachineApiKey } from '@/lib/machine-auth';
 import { createAdminClient } from '@/lib/supabase';
 
 export const runtime = 'nodejs';
@@ -13,19 +14,6 @@ const heartbeatSchema = z.object({
   connectivityType: z.string().min(1).optional(),
   firmwareVersion: z.string().min(1).optional(),
 });
-
-function resolveMachineApiKey(request: Request) {
-  const authHeader = request.headers.get('authorization') ?? request.headers.get('Authorization');
-  if (authHeader) {
-    const [scheme, token] = authHeader.split(' ');
-    if (scheme?.toLowerCase() === 'bearer' && token?.trim()) {
-      return token.trim();
-    }
-  }
-
-  const fallback = request.headers.get('x-machine-api-key');
-  return fallback?.trim() ?? null;
-}
 
 function resolveThreshold(settings: unknown): number {
   const raw = (settings as { tempThreshold?: unknown } | null)?.tempThreshold;
@@ -50,33 +38,25 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: 'Invalid heartbeat payload' }, { status: 400 });
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
+  const machine = await getAuthorizedMachineByMid(adminDb, {
+    mid: parsed.data.mid,
+    machineApiKey,
+  });
 
-  const { data: machineData } = await adminDb
-    .from('machines')
-    .select('id, operator_id, api_key, mid, settings')
-    .eq('mid', parsed.data.mid)
-    .maybeSingle();
-
-  const machine = machineData as
-    | {
-        id: string;
-        operator_id: string;
-        api_key: string | null;
-        mid: string;
-        settings: Record<string, unknown> | null;
-      }
-    | null;
-
-  if (!machine?.id || !machine.operator_id || !machine.api_key || machine.api_key !== machineApiKey) {
+  if (!machine?.id || !machine.operator_id) {
     return NextResponse.json({ ok: false, error: 'Unauthorized machine credentials' }, { status: 401 });
   }
 
   const threshold = resolveThreshold(machine.settings);
   const tooWarm = Number(parsed.data.temperature) > threshold;
   const nowIso = new Date().toISOString();
+  const currentSettings =
+    machine.settings && typeof machine.settings === 'object' && !Array.isArray(machine.settings)
+      ? (machine.settings as Record<string, unknown>)
+      : {};
   const nextSettings = {
-    ...(machine.settings ?? {}),
+    ...currentSettings,
     lastConnectivityType: parsed.data.connectivityType ?? null,
     lastFirmwareVersion: parsed.data.firmwareVersion ?? null,
     lastHeartbeatAt: nowIso,

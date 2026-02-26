@@ -59,7 +59,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: 'Invalid payload' }, { status: 400 });
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const hasMembership = await ensureConsumerMembership(adminDb, auth.user.id, parsed.data.operatorId);
   if (!hasMembership) {
@@ -103,7 +103,7 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ ok: false, error: 'Invalid payload' }, { status: 400 });
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const hasMembership = await ensureConsumerMembership(adminDb, auth.user.id, parsed.data.operatorId);
   if (!hasMembership) {

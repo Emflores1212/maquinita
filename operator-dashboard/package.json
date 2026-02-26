@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "check:no-\u0066irebase": "sh -c \"if rg -n -i '\u0066irebase|\u0066irestore' . --glob '!**/node_modules/**' --glob '!**/.next/**' --glob '!**/.git/**' --glob '!package.json'; then echo 'Deprecated provider references found. Remove them before merging.'; exit 1; fi\"",
     "supabase:types": "supabase gen types typescript --project-id $SUPABASE_PROJECT_ID > lib/types/database.ts"
   },
   "dependencies": {

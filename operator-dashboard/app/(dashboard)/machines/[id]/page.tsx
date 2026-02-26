@@ -14,7 +14,7 @@ import { getTodayMetrics } from '@/lib/dashboard';
 
 export default async function MachineDetailPage({ params }: { params: { id: string } }) {
   const supabase = createServerClient();
-  const db = supabase as any;
+  const db = supabase;
 
   const {
     data: { user },

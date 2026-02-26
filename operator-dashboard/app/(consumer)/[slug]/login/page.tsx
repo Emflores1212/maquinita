@@ -18,7 +18,7 @@ export default async function ConsumerLoginPage({
   searchParams: { returnUrl?: string };
 }) {
   const supabase = createServerClient();
-  const db = supabase as any;
+  const db = supabase;
 
   const { data: operatorData } = await db.from('operators').select('id, slug').eq('slug', params.slug).maybeSingle();
   const operator = operatorData as { id: string; slug: string } | null;

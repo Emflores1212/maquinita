@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { MapPin, Package, UserCircle } from 'lucide-react';
@@ -22,12 +21,6 @@ export default function ConsumerShell({
   const pathname = usePathname();
   const t = useTranslations('consumer.nav');
   const isLoginRoute = pathname.endsWith('/login');
-
-  useEffect(() => {
-    if (!('serviceWorker' in navigator)) return;
-    const scope = `/${operator.slug}/`;
-    void navigator.serviceWorker.register('/sw.js', { scope }).catch(() => undefined);
-  }, [operator.slug]);
 
   return (
     <div className="min-h-screen bg-slate-50" style={{ '--brand-primary': operator.primaryColor } as React.CSSProperties}>

@@ -10,7 +10,7 @@ export async function GET(request: Request) {
     return failure(401, 'UNAUTHORIZED', 'Missing x-operator-id header.');
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   const url = new URL(request.url);
   const { page, limit, from, to } = parsePage(url.searchParams);
 

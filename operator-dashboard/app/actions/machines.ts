@@ -58,7 +58,7 @@ function normalizeOptionalText(value: string | null | undefined) {
 
 async function getOperatorContext() {
   const supabase = createServerClient();
-  const db = supabase as any;
+  const db = supabase;
 
   const {
     data: { user },
@@ -128,8 +128,9 @@ export async function createMachineAction(payload: z.infer<typeof machineInputSc
   if (!hasPermission(ctx.profile.role, 'machines', 'w')) {
     return { ok: false, error: 'Permission denied' };
   }
+  const operatorId = ctx.profile.operator_id as string;
 
-  const adminClient = createAdminClient() as any;
+  const adminClient = createAdminClient();
 
   let mid: string;
   try {
@@ -139,7 +140,7 @@ export async function createMachineAction(payload: z.infer<typeof machineInputSc
   }
 
   const insertPayload = {
-    operator_id: ctx.profile.operator_id,
+    operator_id: operatorId,
     name: parsed.data.name,
     mid,
     type: parsed.data.type,
@@ -162,7 +163,7 @@ export async function createMachineAction(payload: z.infer<typeof machineInputSc
   }
 
   await adminClient.from('audit_log').insert({
-    operator_id: ctx.profile.operator_id,
+    operator_id: operatorId,
     user_id: ctx.user.id,
     action: 'machine.created',
     entity_type: 'machines',
@@ -195,14 +196,15 @@ export async function updateMachineAction(payload: z.infer<typeof machineInputSc
   if (!hasPermission(ctx.profile.role, 'machines', 'w')) {
     return { ok: false, error: 'Permission denied' };
   }
+  const operatorId = ctx.profile.operator_id as string;
 
-  const adminClient = createAdminClient() as any;
+  const adminClient = createAdminClient();
 
   const { data: machineData } = await adminClient
     .from('machines')
     .select('id')
     .eq('id', parsed.data.id)
-    .eq('operator_id', ctx.profile.operator_id)
+    .eq('operator_id', operatorId)
     .maybeSingle();
 
   if (!machineData) {
@@ -221,14 +223,14 @@ export async function updateMachineAction(payload: z.infer<typeof machineInputSc
       notes: normalizeOptionalText(parsed.data.notes),
     })
     .eq('id', parsed.data.id)
-    .eq('operator_id', ctx.profile.operator_id);
+    .eq('operator_id', operatorId);
 
   if (updateError) {
     return { ok: false, error: 'Failed to update machine' };
   }
 
   await adminClient.from('audit_log').insert({
-    operator_id: ctx.profile.operator_id,
+    operator_id: operatorId,
     user_id: ctx.user.id,
     action: 'machine.updated',
     entity_type: 'machines',
@@ -261,14 +263,15 @@ export async function updateMachineSettingsAction(payload: z.infer<typeof settin
   if (!hasPermission(ctx.profile.role, 'machines', 'w')) {
     return { ok: false, error: 'Permission denied' };
   }
+  const operatorId = ctx.profile.operator_id as string;
 
-  const adminClient = createAdminClient() as any;
+  const adminClient = createAdminClient();
 
   const { data: machineData } = await adminClient
     .from('machines')
     .select('id, settings')
     .eq('id', parsed.data.machineId)
-    .eq('operator_id', ctx.profile.operator_id)
+    .eq('operator_id', operatorId)
     .maybeSingle();
 
   if (!machineData) {
@@ -294,7 +297,7 @@ export async function updateMachineSettingsAction(payload: z.infer<typeof settin
       settings: nextSettings,
     })
     .eq('id', parsed.data.machineId)
-    .eq('operator_id', ctx.profile.operator_id);
+    .eq('operator_id', operatorId);
 
   if (machineUpdateError) {
     return { ok: false, error: 'Failed to update machine settings' };
@@ -303,7 +306,7 @@ export async function updateMachineSettingsAction(payload: z.infer<typeof settin
   const { data: driversData } = await adminClient
     .from('profiles')
     .select('id, assigned_machine_ids')
-    .eq('operator_id', ctx.profile.operator_id)
+    .eq('operator_id', operatorId)
     .eq('role', 'driver');
 
   const drivers = (driversData as Array<{ id: string; assigned_machine_ids: string[] | null }> | null) ?? [];
@@ -329,7 +332,7 @@ export async function updateMachineSettingsAction(payload: z.infer<typeof settin
   }
 
   const normalizedPreferences = parsed.data.alertPreferences.map((preference) => ({
-    operator_id: ctx.profile.operator_id,
+    operator_id: operatorId,
     machine_id: parsed.data.machineId,
     user_id: preference.userId,
     alert_type: preference.alertType,
@@ -342,7 +345,7 @@ export async function updateMachineSettingsAction(payload: z.infer<typeof settin
   await adminClient
     .from('machine_alert_preferences')
     .delete()
-    .eq('operator_id', ctx.profile.operator_id)
+    .eq('operator_id', operatorId)
     .eq('machine_id', parsed.data.machineId);
 
   if (normalizedPreferences.length > 0) {
@@ -350,7 +353,7 @@ export async function updateMachineSettingsAction(payload: z.infer<typeof settin
   }
 
   await adminClient.from('audit_log').insert({
-    operator_id: ctx.profile.operator_id,
+    operator_id: operatorId,
     user_id: ctx.user.id,
     action: 'machine.settings.updated',
     entity_type: 'machines',
@@ -362,7 +365,7 @@ export async function updateMachineSettingsAction(payload: z.infer<typeof settin
   });
 
   await adminClient.from('audit_log').insert({
-    operator_id: ctx.profile.operator_id,
+    operator_id: operatorId,
     user_id: ctx.user.id,
     action: 'machine.alert_preferences.updated',
     entity_type: 'machines',
@@ -393,15 +396,16 @@ export async function resolveMachineAlertAction(payload: z.infer<typeof resolveM
   if (!hasPermission(ctx.profile.role, 'machines', 'w')) {
     return { ok: false, error: 'Permission denied' };
   }
+  const operatorId = ctx.profile.operator_id as string;
 
-  const adminClient = createAdminClient() as any;
+  const adminClient = createAdminClient();
 
   const { data: alertData } = await adminClient
     .from('alerts')
     .select('id, type')
     .eq('id', parsed.data.alertId)
     .eq('machine_id', parsed.data.machineId)
-    .eq('operator_id', ctx.profile.operator_id)
+    .eq('operator_id', operatorId)
     .is('resolved_at', null)
     .maybeSingle();
 
@@ -416,7 +420,7 @@ export async function resolveMachineAlertAction(payload: z.infer<typeof resolveM
       resolved_by: ctx.user.id,
     })
     .eq('id', parsed.data.alertId)
-    .eq('operator_id', ctx.profile.operator_id);
+    .eq('operator_id', operatorId);
 
   if (updateError) {
     return { ok: false, error: 'Failed to resolve alert' };
@@ -425,12 +429,12 @@ export async function resolveMachineAlertAction(payload: z.infer<typeof resolveM
   await adminClient
     .from('machine_alert_conditions')
     .delete()
-    .eq('operator_id', ctx.profile.operator_id)
+    .eq('operator_id', operatorId)
     .eq('machine_id', parsed.data.machineId)
     .eq('alert_type', String(alertData.type));
 
   await adminClient.from('audit_log').insert({
-    operator_id: ctx.profile.operator_id,
+    operator_id: operatorId,
     user_id: ctx.user.id,
     action: 'machine.alert.resolved',
     entity_type: 'alerts',

@@ -2,11 +2,11 @@
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import { hasPermission, type UserRole } from '@/lib/permissions';
-import { createAdminClient, createServerClient } from '@/lib/supabase';
+import { createAdminClient } from '@/lib/supabase';
 import { getStripeServer } from '@/lib/stripe';
 import { parseTransactionItems, appendTimelineStep } from '@/lib/transactions';
 import { sendTransactionEmail } from '@/lib/transaction-receipts';
+import { insertAuditLog, requireActionContext, requirePermission } from '@/app/actions/_shared';
 
 const refundSchema = z
   .object({
@@ -39,14 +39,6 @@ const receiptTemplateSchema = z.object({
   supportPhone: z.string().trim().max(50).optional().nullable(),
 });
 
-type OperatorContext =
-  | { error: string }
-  | {
-      userId: string;
-      operatorId: string;
-      role: UserRole | null;
-    };
-
 function centsFromDollars(value: number) {
   return Math.round(value * 100);
 }
@@ -55,47 +47,18 @@ function dollarsFromCents(value: number) {
   return Math.round(value) / 100;
 }
 
-async function getOperatorContext(): Promise<OperatorContext> {
-  const supabase = createServerClient();
-  const db = supabase as any;
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) return { error: 'Not authenticated' };
-
-  const { data: profileData, error: profileError } = await db
-    .from('profiles')
-    .select('operator_id, role')
-    .eq('id', user.id)
-    .single();
-
-  const profile = profileData as { operator_id: string | null; role: UserRole | null } | null;
-  if (profileError || !profile?.operator_id) {
-    return { error: 'Invalid profile context' };
-  }
-
-  return {
-    userId: user.id,
-    operatorId: profile.operator_id,
-    role: profile.role,
-  };
-}
-
 export async function issueRefundAction(payload: z.infer<typeof refundSchema>) {
   const parsed = refundSchema.safeParse(payload);
   if (!parsed.success) {
     return { ok: false as const, error: 'Invalid refund payload' };
   }
 
-  const ctx = await getOperatorContext();
+  const ctx = await requireActionContext();
   if ('error' in ctx) return { ok: false as const, error: ctx.error };
-  if (!hasPermission(ctx.role, 'transactions', 'w')) {
-    return { ok: false as const, error: 'Permission denied' };
-  }
+  const permission = requirePermission(ctx.role, 'transactions', 'w');
+  if (!permission.ok) return { ok: false as const, error: permission.error };
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   const { data: transactionData } = await adminDb
     .from('transactions')
     .select(
@@ -224,7 +187,7 @@ export async function issueRefundAction(payload: z.infer<typeof refundSchema>) {
     refundAmount,
   });
 
-  await adminDb.from('audit_log').insert({
+  await insertAuditLog(adminDb, {
     operator_id: ctx.operatorId,
     user_id: ctx.userId,
     action: 'transaction.refund.created',
@@ -259,13 +222,12 @@ export async function resendTransactionReceiptAction(payload: z.infer<typeof res
     return { ok: false as const, error: 'Invalid transaction id' };
   }
 
-  const ctx = await getOperatorContext();
+  const ctx = await requireActionContext();
   if ('error' in ctx) return { ok: false as const, error: ctx.error };
-  if (!hasPermission(ctx.role, 'transactions', 'w')) {
-    return { ok: false as const, error: 'Permission denied' };
-  }
+  const permission = requirePermission(ctx.role, 'transactions', 'w');
+  if (!permission.ok) return { ok: false as const, error: permission.error };
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   const { data: transactionData } = await adminDb
     .from('transactions')
     .select(
@@ -318,7 +280,7 @@ export async function resendTransactionReceiptAction(payload: z.infer<typeof res
     .eq('id', transaction.id)
     .eq('operator_id', ctx.operatorId);
 
-  await adminDb.from('audit_log').insert({
+  await insertAuditLog(adminDb, {
     operator_id: ctx.operatorId,
     user_id: ctx.userId,
     action: 'transaction.receipt.resent',
@@ -340,13 +302,12 @@ export async function saveReceiptTemplateAction(payload: z.infer<typeof receiptT
     return { ok: false as const, error: 'Invalid receipt template payload' };
   }
 
-  const ctx = await getOperatorContext();
+  const ctx = await requireActionContext();
   if ('error' in ctx) return { ok: false as const, error: ctx.error };
-  if (!hasPermission(ctx.role, 'settings', 'w')) {
-    return { ok: false as const, error: 'Permission denied' };
-  }
+  const permission = requirePermission(ctx.role, 'settings', 'w');
+  if (!permission.ok) return { ok: false as const, error: permission.error };
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   const { data: operatorData } = await adminDb.from('operators').select('branding').eq('id', ctx.operatorId).maybeSingle();
   const currentBranding = ((operatorData as { branding?: Record<string, unknown> } | null)?.branding ?? {}) as Record<string, unknown>;
 
@@ -370,7 +331,7 @@ export async function saveReceiptTemplateAction(payload: z.infer<typeof receiptT
     return { ok: false as const, error: 'Failed to save receipt template settings' };
   }
 
-  await adminDb.from('audit_log').insert({
+  await insertAuditLog(adminDb, {
     operator_id: ctx.operatorId,
     user_id: ctx.userId,
     action: 'settings.receipt_template.updated',

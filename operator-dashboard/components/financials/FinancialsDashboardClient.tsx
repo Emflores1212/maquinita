@@ -6,8 +6,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { ArrowDown, ArrowUp, Download } from 'lucide-react';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import { csvEscape, formatMoney, formatPercent } from '@/lib/format';
 import type {
   DailyFinancialPoint,
   DeltaSummary,
@@ -48,29 +47,6 @@ type FinancialsDashboardClientProps = {
   periodLabel: string;
   selectedMachineLabel: string;
 };
-
-function money(value: number, locale: string) {
-  return new Intl.NumberFormat(locale || 'en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-  }).format(value);
-}
-
-function percent(value: number, locale: string) {
-  return new Intl.NumberFormat(locale || 'en-US', {
-    style: 'percent',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value / 100);
-}
-
-function csvEscape(value: string) {
-  if (value.includes(',') || value.includes('"') || value.includes('\n')) {
-    return `"${value.replace(/"/g, '""')}"`;
-  }
-  return value;
-}
 
 function deltaColor(delta: DeltaSummary) {
   if (delta.direction === 'up') return 'text-emerald-700';
@@ -170,41 +146,44 @@ export default function FinancialsDashboardClient({
   };
 
   const exportTaxPdf = () => {
-    const doc = new jsPDF({ unit: 'pt', format: 'letter' });
-    doc.setFontSize(16);
-    doc.text(t('tax.pdfTitle'), 40, 44);
+    void (async () => {
+      const [{ default: jsPDF }, { default: autoTable }] = await Promise.all([import('jspdf'), import('jspdf-autotable')]);
+      const doc = new jsPDF({ unit: 'pt', format: 'letter' });
+      doc.setFontSize(16);
+      doc.text(t('tax.pdfTitle'), 40, 44);
 
-    doc.setFontSize(10);
-    doc.text(`${t('periodLabel')}: ${periodLabel}`, 40, 62);
-    doc.text(`${t('filters.machine')}: ${selectedMachineLabel}`, 40, 76);
-    doc.text(`${t('tax.generatedAt')}: ${new Date().toLocaleString(locale)}`, 40, 90);
+      doc.setFontSize(10);
+      doc.text(`${t('periodLabel')}: ${periodLabel}`, 40, 62);
+      doc.text(`${t('filters.machine')}: ${selectedMachineLabel}`, 40, 76);
+      doc.text(`${t('tax.generatedAt')}: ${new Date().toLocaleString(locale)}`, 40, 90);
 
-    autoTable(doc, {
-      startY: 110,
-      head: [[t('tax.table.machine'), t('tax.table.grossSales'), t('tax.table.taxCollected'), t('tax.table.taxRate')]],
-      body: taxRows.map((row) => [
-        row.machineName,
-        money(row.grossSales, locale),
-        money(row.taxCollected, locale),
-        `${row.taxRate.toFixed(2)}%`,
-      ]),
-      styles: {
-        fontSize: 9,
-      },
-      headStyles: {
-        fillColor: [13, 43, 78],
-      },
-    });
+      autoTable(doc, {
+        startY: 110,
+        head: [[t('tax.table.machine'), t('tax.table.grossSales'), t('tax.table.taxCollected'), t('tax.table.taxRate')]],
+        body: taxRows.map((row) => [
+          row.machineName,
+          formatMoney(row.grossSales, locale),
+          formatMoney(row.taxCollected, locale),
+          `${row.taxRate.toFixed(2)}%`,
+        ]),
+        styles: {
+          fontSize: 9,
+        },
+        headStyles: {
+          fillColor: [13, 43, 78],
+        },
+      });
 
-    const totalGross = taxRows.reduce((sum, row) => sum + row.grossSales, 0);
-    const totalTax = taxRows.reduce((sum, row) => sum + row.taxCollected, 0);
+      const totalGross = taxRows.reduce((sum, row) => sum + row.grossSales, 0);
+      const totalTax = taxRows.reduce((sum, row) => sum + row.taxCollected, 0);
 
-    const lastY = (doc as any).lastAutoTable?.finalY ?? 140;
-    doc.setFontSize(10);
-    doc.text(`${t('tax.totals.gross')}: ${money(totalGross, locale)}`, 40, lastY + 20);
-    doc.text(`${t('tax.totals.tax')}: ${money(totalTax, locale)}`, 40, lastY + 34);
+      const lastY = (doc as any).lastAutoTable?.finalY ?? 140;
+      doc.setFontSize(10);
+      doc.text(`${t('tax.totals.gross')}: ${formatMoney(totalGross, locale)}`, 40, lastY + 20);
+      doc.text(`${t('tax.totals.tax')}: ${formatMoney(totalTax, locale)}`, 40, lastY + 34);
 
-    doc.save(`financials-tax-${new Date().toISOString().slice(0, 10)}.pdf`);
+      doc.save(`financials-tax-${new Date().toISOString().slice(0, 10)}.pdf`);
+    })();
   };
 
   return (
@@ -335,7 +314,7 @@ export default function FinancialsDashboardClient({
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
           <p className="text-xs font-semibold uppercase text-slate-500">{t('kpis.grossRevenue')}</p>
-          <p className="mt-2 text-2xl font-bold text-slate-900">{money(summary.grossRevenue, locale)}</p>
+          <p className="mt-2 text-2xl font-bold text-slate-900">{formatMoney(summary.grossRevenue, locale)}</p>
           <p className={`mt-2 flex items-center gap-1 text-xs font-semibold ${deltaColor(deltas.grossRevenue)}`}>
             {deltas.grossRevenue.direction === 'up' ? <ArrowUp className="h-3.5 w-3.5" /> : <ArrowDown className="h-3.5 w-3.5" />}
             {deltas.grossRevenue.percent === null ? t('kpis.noBaseline') : `${deltas.grossRevenue.percent.toFixed(1)}%`}
@@ -344,7 +323,7 @@ export default function FinancialsDashboardClient({
 
         <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
           <p className="text-xs font-semibold uppercase text-slate-500">{t('kpis.platformFees')}</p>
-          <p className="mt-2 text-2xl font-bold text-slate-900">{money(summary.platformFees, locale)}</p>
+          <p className="mt-2 text-2xl font-bold text-slate-900">{formatMoney(summary.platformFees, locale)}</p>
           <p className={`mt-2 flex items-center gap-1 text-xs font-semibold ${deltaColor(deltas.platformFees)}`}>
             {deltas.platformFees.direction === 'up' ? <ArrowUp className="h-3.5 w-3.5" /> : <ArrowDown className="h-3.5 w-3.5" />}
             {deltas.platformFees.percent === null ? t('kpis.noBaseline') : `${deltas.platformFees.percent.toFixed(1)}%`}
@@ -353,7 +332,7 @@ export default function FinancialsDashboardClient({
 
         <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
           <p className="text-xs font-semibold uppercase text-slate-500">{t('kpis.stripeFees')}</p>
-          <p className="mt-2 text-2xl font-bold text-slate-900">{money(summary.stripeFees, locale)}</p>
+          <p className="mt-2 text-2xl font-bold text-slate-900">{formatMoney(summary.stripeFees, locale)}</p>
           <p className={`mt-2 flex items-center gap-1 text-xs font-semibold ${deltaColor(deltas.stripeFees)}`}>
             {deltas.stripeFees.direction === 'up' ? <ArrowUp className="h-3.5 w-3.5" /> : <ArrowDown className="h-3.5 w-3.5" />}
             {deltas.stripeFees.percent === null ? t('kpis.noBaseline') : `${deltas.stripeFees.percent.toFixed(1)}%`}
@@ -362,7 +341,7 @@ export default function FinancialsDashboardClient({
 
         <div className="rounded-xl border border-[#0D2B4E] bg-[#0D2B4E] p-4 shadow-sm">
           <p className="text-xs font-semibold uppercase text-blue-100">{t('kpis.netToOperator')}</p>
-          <p className="mt-2 text-3xl font-extrabold text-white">{money(summary.netToOperator, locale)}</p>
+          <p className="mt-2 text-3xl font-extrabold text-white">{formatMoney(summary.netToOperator, locale)}</p>
           <p className={`mt-2 flex items-center gap-1 text-xs font-semibold ${deltas.netToOperator.direction === 'down' ? 'text-red-100' : 'text-emerald-100'}`}>
             {deltas.netToOperator.direction === 'up' ? <ArrowUp className="h-3.5 w-3.5" /> : <ArrowDown className="h-3.5 w-3.5" />}
             {deltas.netToOperator.percent === null ? t('kpis.noBaseline') : `${deltas.netToOperator.percent.toFixed(1)}%`}
@@ -390,8 +369,8 @@ export default function FinancialsDashboardClient({
                   return (
                     <div className="rounded-lg border border-slate-200 bg-white p-2 text-xs shadow-sm">
                       <p className="font-semibold text-slate-700">{label}</p>
-                      <p className="text-slate-600">{t('chart.grossToggle')}: {money(row.grossRevenue, locale)}</p>
-                      <p className="text-slate-600">{t('chart.netToggle')}: {money(row.netToOperator, locale)}</p>
+                      <p className="text-slate-600">{t('chart.grossToggle')}: {formatMoney(row.grossRevenue, locale)}</p>
+                      <p className="text-slate-600">{t('chart.netToggle')}: {formatMoney(row.netToOperator, locale)}</p>
                       <p className="text-slate-600">{t('machineTable.columns.transactions')}: {row.transactions}</p>
                     </div>
                   );
@@ -440,12 +419,12 @@ export default function FinancialsDashboardClient({
               {machineRows.map((row) => (
                 <tr key={row.machineId} className="border-t border-slate-100">
                   <td className="px-3 py-2 font-semibold text-slate-800">{row.machineName}</td>
-                  <td className="px-3 py-2">{money(row.gross, locale)}</td>
+                  <td className="px-3 py-2">{formatMoney(row.gross, locale)}</td>
                   <td className="px-3 py-2">{row.transactions}</td>
-                  <td className="px-3 py-2">{money(row.refunds, locale)}</td>
-                  <td className="px-3 py-2">{money(row.platformFee, locale)}</td>
-                  <td className="px-3 py-2 font-semibold text-slate-900">{money(row.net, locale)}</td>
-                  <td className="px-3 py-2">{percent(row.percentOfTotal, locale)}</td>
+                  <td className="px-3 py-2">{formatMoney(row.refunds, locale)}</td>
+                  <td className="px-3 py-2">{formatMoney(row.platformFee, locale)}</td>
+                  <td className="px-3 py-2 font-semibold text-slate-900">{formatMoney(row.net, locale)}</td>
+                  <td className="px-3 py-2">{formatPercent(row.percentOfTotal, locale)}</td>
                 </tr>
               ))}
               {machineRows.length === 0 ? (
@@ -462,11 +441,11 @@ export default function FinancialsDashboardClient({
 
       <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
         <h2 className="text-base font-bold text-slate-900">{t('fees.title')}</h2>
-        <p className="mt-2 text-sm text-slate-700">{t('fees.saasFee', { amount: money(fees.saasMonthlyFee, locale) })}</p>
+        <p className="mt-2 text-sm text-slate-700">{t('fees.saasFee', { amount: formatMoney(fees.saasMonthlyFee, locale) })}</p>
         <p className="text-sm text-slate-700">
           {t('fees.txFee', {
             percent: `${(fees.feeRate * 100).toFixed(2)}%`,
-            fixed: money(fees.feeFixed, locale),
+            fixed: formatMoney(fees.feeFixed, locale),
           })}
         </p>
 
@@ -482,10 +461,10 @@ export default function FinancialsDashboardClient({
           </label>
           <p className="mt-3 text-sm text-slate-700">
             {t('fees.breakdown', {
-              sale: money(calculator.sale, locale),
-              platform: money(calculator.platform, locale),
-              stripe: money(calculator.stripe, locale),
-              net: money(calculator.net, locale),
+              sale: formatMoney(calculator.sale, locale),
+              platform: formatMoney(calculator.platform, locale),
+              stripe: formatMoney(calculator.stripe, locale),
+              net: formatMoney(calculator.net, locale),
             })}
           </p>
         </div>
@@ -528,8 +507,8 @@ export default function FinancialsDashboardClient({
               {taxRows.map((row) => (
                 <tr key={row.machineId} className="border-t border-slate-100">
                   <td className="px-3 py-2 font-semibold text-slate-800">{row.machineName}</td>
-                  <td className="px-3 py-2">{money(row.grossSales, locale)}</td>
-                  <td className="px-3 py-2">{money(row.taxCollected, locale)}</td>
+                  <td className="px-3 py-2">{formatMoney(row.grossSales, locale)}</td>
+                  <td className="px-3 py-2">{formatMoney(row.taxCollected, locale)}</td>
                   <td className="px-3 py-2">{row.taxRate.toFixed(2)}%</td>
                 </tr>
               ))}

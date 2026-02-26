@@ -16,7 +16,7 @@ export async function GET() {
     return NextResponse.redirect(new URL('/login?returnUrl=/financials/banking', getAppBaseUrl()));
   }
 
-  const db = supabase as any;
+  const db = supabase;
   const { data: profileData } = await db.from('profiles').select('operator_id, role').eq('id', user.id).maybeSingle();
   const profile = profileData as { operator_id: string | null; role: UserRole | null } | null;
 
@@ -24,7 +24,7 @@ export async function GET() {
     return NextResponse.redirect(new URL('/dashboard', getAppBaseUrl()));
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   const { data: operatorData } = await adminDb
     .from('operators')
     .select('id, stripe_account_id')

@@ -26,7 +26,7 @@ export default async function RestockSessionPage({
   }
 
   const supabase = createServerClient();
-  const db = supabase as any;
+  const db = supabase;
 
   const {
     data: { user },
@@ -70,11 +70,12 @@ export default async function RestockSessionPage({
     redirect('/restock/picklist');
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
+  const adminDbAny = adminDb as any;
 
   let resolvedSessionId = sessionId;
   if (resolvedSessionId) {
-    const { data: sessionData } = await adminDb
+    const { data: sessionData } = await adminDbAny
       .from('restock_sessions')
       .select('id, status, machine_id')
       .eq('id', resolvedSessionId)
@@ -88,7 +89,7 @@ export default async function RestockSessionPage({
   }
 
   if (!resolvedSessionId) {
-    const { data: insertedSession, error: insertError } = await adminDb
+    const { data: insertedSession, error: insertError } = await adminDbAny
       .from('restock_sessions')
       .insert({
         operator_id: profile.operator_id,

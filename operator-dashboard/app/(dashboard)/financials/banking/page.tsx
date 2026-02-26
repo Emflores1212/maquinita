@@ -54,7 +54,7 @@ export default async function BankingPage({
   searchParams: Record<string, string | string[] | undefined>;
 }) {
   const supabase = createServerClient();
-  const db = supabase as any;
+  const db = supabase;
 
   const {
     data: { user },
@@ -72,7 +72,7 @@ export default async function BankingPage({
   }
 
   const canWrite = hasPermission(profile.role, 'financials', 'w');
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const { data: operatorData } = await adminDb
     .from('operators')

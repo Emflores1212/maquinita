@@ -1,18 +1,8 @@
-// @ts-nocheck
 import { serve } from 'https://deno.land/std@0.224.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
 import webpush from 'npm:web-push@3.6.7';
-
-function json(data: unknown, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-    },
-  });
-}
+import { requireEnv } from '../_shared/env.ts';
+import { corsHeaders, json } from '../_shared/http.ts';
 
 function dedupe(values: string[]) {
   return Array.from(new Set(values.filter(Boolean)));
@@ -107,19 +97,16 @@ async function resolveTargetConsumerIds(supabase: any, payload: {
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response('ok', {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-      },
-    });
+    return new Response('ok', { headers: corsHeaders });
   }
 
-  const supabaseUrl = Deno.env.get('SUPABASE_URL');
-  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-
-  if (!supabaseUrl || !serviceRoleKey) {
-    return json({ ok: false, error: 'Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY' }, 500);
+  let supabaseUrl = '';
+  let serviceRoleKey = '';
+  try {
+    supabaseUrl = requireEnv('SUPABASE_URL');
+    serviceRoleKey = requireEnv('SUPABASE_SERVICE_ROLE_KEY');
+  } catch (error) {
+    return json({ ok: false, error: error instanceof Error ? error.message : 'Missing service credentials' }, 500);
   }
 
   const vapidPublicKey = Deno.env.get('NEXT_PUBLIC_VAPID_PUBLIC_KEY');

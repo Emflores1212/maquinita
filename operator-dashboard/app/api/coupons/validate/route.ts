@@ -19,7 +19,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ valid: false, error: 'Missing code or machineId' }, { status: 400 });
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const { data: machineData } = await adminDb
     .from('machines')

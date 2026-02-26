@@ -19,7 +19,7 @@ export async function GET(request: Request) {
   startDate.setUTCDate(startDate.getUTCDate() - 29);
   startDate.setUTCHours(0, 0, 0, 0);
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const { data: rowsData, error } = await adminDb
     .from('daily_rollups')

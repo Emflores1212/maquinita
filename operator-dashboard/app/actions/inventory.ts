@@ -36,7 +36,7 @@ function normalizeEpc(epc: string): string {
 
 async function getOperatorContext(): Promise<OperatorContext> {
   const supabase = createServerClient();
-  const db = supabase as any;
+  const db = supabase;
 
   const {
     data: { user },
@@ -80,7 +80,7 @@ export async function upsertParLevelAction(payload: z.infer<typeof upsertParLeve
     return { ok: false, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const [{ data: machineData }, { data: productData }] = await Promise.all([
     adminDb
@@ -159,7 +159,7 @@ export async function discardExpiredItemAction(payload: z.infer<typeof discardBy
     return { ok: false, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   const epc = normalizeEpc(parsed.data.epc);
 
   const { data: itemData } = await adminDb

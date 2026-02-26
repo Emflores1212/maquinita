@@ -57,7 +57,7 @@ export async function bootstrapConsumerProfileAction(payload: z.infer<typeof boo
     return { ok: false, error: auth.error };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const { data: operatorData } = await adminDb.from('operators').select('id').eq('id', parsed.data.operatorId).maybeSingle();
   if (!operatorData?.id) {
@@ -122,7 +122,7 @@ export async function updateConsumerNotificationOptInAction(
     return { ok: false, error: auth.error };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const { data: profileData } = await adminDb
     .from('consumer_profiles')
@@ -171,7 +171,7 @@ export async function submitConsumerFeedbackAction(payload: z.infer<typeof submi
     return { ok: false, error: auth.error };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const { data: profileData } = await adminDb
     .from('consumer_profiles')

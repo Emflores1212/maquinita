@@ -10,7 +10,7 @@ export async function GET(request: Request) {
     return failure(401, 'UNAUTHORIZED', 'Missing x-operator-id header.');
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   const { searchParams } = new URL(request.url);
   const { page, limit, from, to } = parsePage(searchParams);
 
@@ -30,7 +30,7 @@ export async function GET(request: Request) {
   }
 
   const type = searchParams.get('type')?.trim();
-  if (type) {
+  if (type === 'fridge' || type === 'pantry' || type === 'freezer') {
     query = query.eq('type', type);
   }
 

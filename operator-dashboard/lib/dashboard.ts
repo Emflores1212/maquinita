@@ -16,7 +16,7 @@ function startOfTodayISO() {
 
 const getTodayMetricsCached = unstable_cache(
   async (operatorId: string, machineIdsKey: string): Promise<TodayMetrics> => {
-    const adminClient = createAdminClient() as any;
+    const adminClient = createAdminClient();
     const startISO = startOfTodayISO();
 
     let query = adminClient

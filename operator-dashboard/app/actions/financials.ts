@@ -61,7 +61,7 @@ export async function updatePayoutScheduleAction(payload: z.infer<typeof payoutS
   }
 
   const supabase = createServerClient();
-  const db = supabase as any;
+  const db = supabase;
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -85,7 +85,7 @@ export async function updatePayoutScheduleAction(payload: z.infer<typeof payoutS
     return { ok: false, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   const { data: operatorData } = await adminDb
     .from('operators')
     .select('id, stripe_account_id, settings')

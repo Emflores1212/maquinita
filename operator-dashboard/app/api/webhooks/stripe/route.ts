@@ -39,7 +39,7 @@ async function handlePaymentIntentSucceeded(event: Stripe.Event) {
   const cardLast4 = paymentIntent.metadata?.card_last4 || null;
   const createdAt = new Date((event.created ?? Math.floor(Date.now() / 1000)) * 1000).toISOString();
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   let resolvedDiscountId: string | null = null;
   let resolvedDiscountType: string | null = null;
 
@@ -223,7 +223,7 @@ async function handleRefundCreated(event: Stripe.Event) {
 
   if (!paymentIntentId) return;
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   const { data: txData } = await adminDb
     .from('transactions')
     .select('id, operator_id, amount, refund_amount, status_timeline, created_at')
@@ -547,7 +547,7 @@ async function handlePayoutEvent(event: Stripe.Event) {
 
   if (!stripeAccountId) return;
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   const operatorId = await getOperatorIdByStripeAccount(adminDb, stripeAccountId);
 
   if (!operatorId) return;

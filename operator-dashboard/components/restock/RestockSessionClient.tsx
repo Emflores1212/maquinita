@@ -188,18 +188,18 @@ export default function RestockSessionClient({
       });
 
       if (!result.ok) {
-        if (result.type === 'not_found') {
+        if ('type' in result && result.type === 'not_found') {
           setUnknownEpc(epc);
           setAssignProductId(products[0]?.id ?? '');
           setScanInput('');
           return;
         }
-        if (result.type === 'already_in_machine') {
+        if ('type' in result && result.type === 'already_in_machine') {
           setScanFeedback({ type: 'error', text: t('scan.alreadyInMachine') });
           setScanInput('');
           return;
         }
-        if (result.type === 'in_other_machine') {
+        if ('type' in result && result.type === 'in_other_machine') {
           const machineNameFromResult = (result.machineName as string | null) ?? t('scan.unknownMachine');
           setScanFeedback({
             type: 'error',
@@ -208,7 +208,8 @@ export default function RestockSessionClient({
           setScanInput('');
           return;
         }
-        setScanFeedback({ type: 'error', text: result.error ?? t('scan.genericError') });
+        const errorMessage = 'error' in result && result.error ? result.error : t('scan.genericError');
+        setScanFeedback({ type: 'error', text: errorMessage });
         setScanInput('');
         return;
       }

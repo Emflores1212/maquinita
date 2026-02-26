@@ -19,7 +19,7 @@ export default async function MarketingFeedbackPage({
 }) {
   const t = await getTranslations('marketing.feedback');
   const supabase = createServerClient();
-  const db = supabase as any;
+  const db = supabase;
 
   const {
     data: { user },

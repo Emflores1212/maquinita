@@ -4,6 +4,7 @@ import { useMemo, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2, Copy } from 'lucide-react';
 import { generateApiKeyAction, revokeApiKeyAction } from '@/app/actions/api-access';
+import { formatDateTime } from '@/lib/format';
 
 type ApiKeyRow = {
   id: string;
@@ -15,13 +16,6 @@ type ApiKeyRow = {
   lastUsedAt: string | null;
   isActive: boolean;
 };
-
-function formatDate(value: string | null) {
-  if (!value) return '-';
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return '-';
-  return date.toLocaleString();
-}
 
 export default function ApiKeysSettingsClient({ rows, canEdit }: { rows: ApiKeyRow[]; canEdit: boolean }) {
   const router = useRouter();
@@ -122,8 +116,8 @@ export default function ApiKeysSettingsClient({ rows, canEdit }: { rows: ApiKeyR
                 <td className="px-3 py-2 font-medium text-slate-900">{row.name}</td>
                 <td className="px-3 py-2 font-mono text-xs text-slate-700">{row.keyPrefix}</td>
                 <td className="px-3 py-2 text-slate-600">{row.permissions.join(', ')}</td>
-                <td className="px-3 py-2 text-slate-600">{formatDate(row.createdAt)}</td>
-                <td className="px-3 py-2 text-slate-600">{formatDate(row.lastUsedAt)}</td>
+                <td className="px-3 py-2 text-slate-600">{formatDateTime(row.createdAt)}</td>
+                <td className="px-3 py-2 text-slate-600">{formatDateTime(row.lastUsedAt)}</td>
                 <td className="px-3 py-2 text-slate-600">{row.usageCountToday}</td>
                 <td className="px-3 py-2">
                   <span className={`rounded-full px-2 py-1 text-xs font-semibold ${row.isActive ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-700'}`}>

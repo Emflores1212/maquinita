@@ -118,7 +118,7 @@ function normalizeText(value: string | null | undefined): string | null {
 
 async function getOperatorContext(): Promise<OperatorContext> {
   const supabase = createServerClient();
-  const db = supabase as any;
+  const db = supabase;
 
   const {
     data: { user },
@@ -220,7 +220,7 @@ export async function processScannedEpcAction(payload: z.infer<typeof processEpc
     return { ok: false as const, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const { data: productData } = await adminDb
     .from('products')
@@ -364,7 +364,7 @@ export async function repurposeTagAction(payload: z.infer<typeof repurposeTagSch
     return { ok: false as const, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const { data: existing } = await adminDb
     .from('rfid_items')
@@ -451,7 +451,7 @@ export async function lookupDetachedTagAction(payload: z.infer<typeof lookupTagS
     return { ok: false as const, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const { data: item } = await adminDb
     .from('rfid_items')
@@ -506,7 +506,7 @@ export async function resolveDetachedTagAction(payload: z.infer<typeof detachedR
     return { ok: false as const, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const { data: item } = await adminDb
     .from('rfid_items')
@@ -519,7 +519,7 @@ export async function resolveDetachedTagAction(payload: z.infer<typeof detachedR
     return { ok: false as const, error: 'Tag not found' };
   }
 
-  let nextStatus = 'available';
+  let nextStatus: 'available' | 'lost' = 'available';
   let nextProductId = (item.product_id as string | null) ?? null;
 
   if (parsed.data.option === 'lost') {
@@ -528,6 +528,9 @@ export async function resolveDetachedTagAction(payload: z.infer<typeof detachedR
 
   if (parsed.data.option === 'different') {
     nextProductId = parsed.data.newProductId ?? null;
+    if (!nextProductId) {
+      return { ok: false as const, error: 'newProductId is required' };
+    }
 
     const { data: productData } = await adminDb
       .from('products')
@@ -596,7 +599,7 @@ export async function createTagOrderAction(payload: z.infer<typeof createTagOrde
     return { ok: false as const, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const { data: orderData, error: insertError } = await adminDb
     .from('tag_orders')
@@ -658,7 +661,7 @@ export async function compareInventoryAction(payload: z.infer<typeof compareInve
     return { ok: false, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const { data: machineData } = await adminDb
     .from('machines')
@@ -771,7 +774,7 @@ export async function markMissingTagLostAction(payload: z.infer<typeof markLostS
     return { ok: false, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   const { error: updateError } = await adminDb
     .from('rfid_items')
     .update({
@@ -822,7 +825,7 @@ export async function registerUnexpectedTagAction(payload: z.infer<typeof regist
     return { ok: false, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const { data: machineData } = await adminDb
     .from('machines')

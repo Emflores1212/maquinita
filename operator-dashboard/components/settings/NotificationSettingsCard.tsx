@@ -1,22 +1,10 @@
 'use client';
 
-import { useEffect, useMemo, useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { BellRing } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/components/providers/AuthProvider';
-
-function base64UrlToUint8Array(base64String: string) {
-  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-  const rawData = window.atob(base64);
-  const outputArray = new Uint8Array(rawData.length);
-
-  for (let i = 0; i < rawData.length; i += 1) {
-    outputArray[i] = rawData.charCodeAt(i);
-  }
-
-  return outputArray;
-}
+import { getCurrentPushSubscription, isPushSupported, subscribeToPush, unsubscribeFromPush } from '@/lib/push-client';
 
 export default function NotificationSettingsCard() {
   const t = useTranslations('settingsPage.notifications');
@@ -26,20 +14,16 @@ export default function NotificationSettingsCard() {
   const [feedback, setFeedback] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  const isSupported = useMemo(() => {
-    if (typeof window === 'undefined') return false;
-    return 'Notification' in window && 'serviceWorker' in navigator && 'PushManager' in window;
-  }, []);
+  const supported = isPushSupported();
 
   useEffect(() => {
-    if (!isSupported) return;
+    if (!supported) return;
     setPermission(Notification.permission);
 
     let cancelled = false;
     const checkExistingSubscription = async () => {
       try {
-        const registration = await navigator.serviceWorker.getRegistration();
-        const subscription = await registration?.pushManager.getSubscription();
+        const subscription = await getCurrentPushSubscription();
         if (!cancelled) {
           setIsEnabled(Boolean(subscription));
         }
@@ -53,7 +37,7 @@ export default function NotificationSettingsCard() {
     return () => {
       cancelled = true;
     };
-  }, [isSupported]);
+  }, [supported]);
 
   if (!user || !operatorId) {
     return null;
@@ -77,15 +61,7 @@ export default function NotificationSettingsCard() {
           return;
         }
 
-        const registration = await navigator.serviceWorker.register('/sw.js');
-        let subscription = await registration.pushManager.getSubscription();
-
-        if (!subscription) {
-          subscription = await registration.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: base64UrlToUint8Array(vapidPublicKey),
-          });
-        }
+        const subscription = await subscribeToPush(vapidPublicKey);
 
         const response = await fetch('/api/push/subscribe', {
           method: 'POST',
@@ -113,9 +89,8 @@ export default function NotificationSettingsCard() {
     setFeedback(null);
     startTransition(async () => {
       try {
-        const registration = await navigator.serviceWorker.getRegistration();
-        const subscription = await registration?.pushManager.getSubscription();
-        if (!subscription) {
+        const { endpoint } = await unsubscribeFromPush();
+        if (!endpoint) {
           setIsEnabled(false);
           setFeedback(t('disabled'));
           return;
@@ -126,10 +101,8 @@ export default function NotificationSettingsCard() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ endpoint: subscription.endpoint }),
+          body: JSON.stringify({ endpoint }),
         });
-
-        await subscription.unsubscribe();
         setIsEnabled(false);
         setFeedback(t('disabled'));
       } catch {
@@ -149,7 +122,7 @@ export default function NotificationSettingsCard() {
           <p className="mt-1 text-sm text-slate-600">{t('subtitle')}</p>
           <div className="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
             <p className="text-sm font-medium text-slate-800">
-              {isSupported ? (isEnabled ? t('statusEnabled') : t('statusDisabled')) : t('notSupported')}
+              {supported ? (isEnabled ? t('statusEnabled') : t('statusDisabled')) : t('notSupported')}
             </p>
             <p className="mt-1 text-xs text-slate-500">
               {permission === 'denied' ? t('permissionDenied') : t('subtitle')}
@@ -161,7 +134,7 @@ export default function NotificationSettingsCard() {
             <button
               type="button"
               onClick={enableNotifications}
-              disabled={!isSupported || isPending || permission === 'denied'}
+              disabled={!supported || isPending || permission === 'denied'}
               className="min-h-12 rounded-lg bg-[#0D2B4E] px-4 py-3 text-sm font-semibold text-white hover:bg-[#0A2240] disabled:opacity-60"
             >
               {isPending ? t('working') : t('enableAction')}
@@ -169,7 +142,7 @@ export default function NotificationSettingsCard() {
             <button
               type="button"
               onClick={disableNotifications}
-              disabled={!isSupported || isPending || !isEnabled}
+              disabled={!supported || isPending || !isEnabled}
               className="min-h-12 rounded-lg border border-slate-300 px-4 py-3 text-sm font-semibold text-slate-700 disabled:opacity-60"
             >
               {t('disableAction')}

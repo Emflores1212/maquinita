@@ -1,19 +1,8 @@
-// @ts-nocheck
 import { serve } from 'https://deno.land/std@0.224.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
 import bcrypt from 'npm:bcryptjs@3.0.3';
-
-function json(data: unknown, status = 200, extraHeaders: Record<string, string> = {}) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-      ...extraHeaders,
-    },
-  });
-}
+import { requireEnv } from '../_shared/env.ts';
+import { corsHeaders, json } from '../_shared/http.ts';
 
 function resolveBearerToken(request: Request) {
   const auth = request.headers.get('authorization') ?? request.headers.get('Authorization');
@@ -49,22 +38,19 @@ function trimTrailingSlash(value: string) {
 
 serve(async (request) => {
   if (request.method === 'OPTIONS') {
-    return new Response('ok', {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-      },
-    });
+    return new Response('ok', { headers: corsHeaders });
   }
 
-  const supabaseUrl = Deno.env.get('SUPABASE_URL');
-  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+  let supabaseUrl = '';
+  let serviceRoleKey = '';
+  try {
+    supabaseUrl = requireEnv('SUPABASE_URL');
+    serviceRoleKey = requireEnv('SUPABASE_SERVICE_ROLE_KEY');
+  } catch (error) {
+    return json({ error: error instanceof Error ? error.message : 'Missing service credentials' }, 500);
+  }
   const targetBaseUrl =
     Deno.env.get('API_PROXY_TARGET_URL') ?? Deno.env.get('NEXT_PUBLIC_APP_URL') ?? Deno.env.get('APP_URL') ?? '';
-
-  if (!supabaseUrl || !serviceRoleKey) {
-    return json({ error: 'Missing Supabase service credentials' }, 500);
-  }
 
   if (!targetBaseUrl) {
     return json({ error: 'Missing API proxy target URL env (API_PROXY_TARGET_URL or NEXT_PUBLIC_APP_URL)' }, 500);

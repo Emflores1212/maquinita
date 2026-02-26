@@ -1,8 +1,13 @@
 import { redirect } from 'next/navigation';
-import TagManagementClient from '@/components/inventory/TagManagementClient';
+import dynamic from 'next/dynamic';
 import type { InventoryMachine, InventoryProduct, ShippingAddress, TagOrder } from '@/components/inventory/types';
 import { hasPermission, type UserRole } from '@/lib/permissions';
 import { createServerClient } from '@/lib/supabase';
+
+const TagManagementClient = dynamic(() => import('@/components/inventory/TagManagementClient'), {
+  ssr: false,
+  loading: () => <div className="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-500">Loading tag management...</div>,
+});
 
 function getDefaultShippingAddress(input: unknown, fallbackContactName: string): ShippingAddress {
   const record = (input as Record<string, unknown> | null) ?? {};
@@ -22,7 +27,7 @@ function getDefaultShippingAddress(input: unknown, fallbackContactName: string):
 
 export default async function InventoryTagsPage() {
   const supabase = createServerClient();
-  const db = supabase as any;
+  const db = supabase;
 
   const {
     data: { user },

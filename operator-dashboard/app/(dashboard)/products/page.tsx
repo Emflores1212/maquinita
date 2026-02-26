@@ -6,7 +6,7 @@ import { createServerClient } from '@/lib/supabase';
 
 export default async function ProductsPage() {
   const supabase = createServerClient();
-  const db = supabase as any;
+  const db = supabase;
 
   const {
     data: { user },

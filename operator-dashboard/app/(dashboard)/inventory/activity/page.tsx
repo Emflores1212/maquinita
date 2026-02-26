@@ -33,7 +33,7 @@ export default async function InventoryActivityPage({
   searchParams: Record<string, string | string[] | undefined>;
 }) {
   const supabase = createServerClient();
-  const db = supabase as any;
+  const db = supabase;
 
   const {
     data: { user },
@@ -142,7 +142,7 @@ export default async function InventoryActivityPage({
 
   const signedPhotoByPath = new Map<string, string>();
   if (allPhotoPaths.length > 0) {
-    const adminDb = createAdminClient() as any;
+    const adminDb = createAdminClient();
     const { data: signedRows } = await adminDb.storage.from('cabinet-photos').createSignedUrls(allPhotoPaths, 60 * 60);
     const signed = (signedRows as Array<{ signedUrl?: string; path?: string; error?: unknown }> | null) ?? [];
     signed.forEach((row, index) => {

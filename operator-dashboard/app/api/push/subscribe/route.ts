@@ -45,7 +45,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: 'Invalid push subscription payload' }, { status: 400 });
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const { data: existingData } = await adminDb
     .from('push_subscriptions')
@@ -86,7 +86,7 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ ok: false, error: 'Missing endpoint' }, { status: 400 });
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   await adminDb
     .from('push_subscriptions')
     .delete()

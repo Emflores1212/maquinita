@@ -15,7 +15,7 @@ function readBrandingField(source: Record<string, unknown>, key: string) {
 export default async function SettingsPage() {
   const tProfitability = await getTranslations('settingsPage.profitability');
   const supabase = createServerClient();
-  const db = supabase as any;
+  const db = supabase;
   const {
     data: { user },
   } = await supabase.auth.getUser();

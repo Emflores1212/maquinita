@@ -11,7 +11,7 @@ function safeNumber(value: unknown, fallback = 0) {
 
 export default async function PayoutsHistoryPage() {
   const supabase = createServerClient();
-  const db = supabase as any;
+  const db = supabase;
 
   const {
     data: { user },

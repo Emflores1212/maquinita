@@ -88,7 +88,7 @@ function hasMachineAccess(ctx: Extract<OperatorContext, { operatorId: string }>,
 
 async function getOperatorContext(): Promise<OperatorContext> {
   const supabase = createServerClient();
-  const db = supabase as any;
+  const db = supabase;
 
   const {
     data: { user },
@@ -172,7 +172,7 @@ export async function scanRestockEpcAction(payload: z.infer<typeof scanRestockEp
     return { ok: false as const, error: 'Invalid EPC format' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   const sessionAccess = await ensureRestockSessionAccess(adminDb, ctx, parsed.data.sessionId, parsed.data.machineId);
   if (!sessionAccess.ok) return sessionAccess;
 
@@ -252,7 +252,7 @@ export async function assignUnknownRestockEpcAction(payload: z.infer<typeof assi
     return { ok: false as const, error: 'Invalid EPC format' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   const sessionAccess = await ensureRestockSessionAccess(adminDb, ctx, parsed.data.sessionId, parsed.data.machineId);
   if (!sessionAccess.ok) return sessionAccess;
 
@@ -349,7 +349,7 @@ export async function completeRestockSessionAction(payload: z.infer<typeof compl
     return { ok: false as const, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   const sessionAccess = await ensureRestockSessionAccess(adminDb, ctx, parsed.data.sessionId, parsed.data.machineId);
   if (!sessionAccess.ok) return sessionAccess;
 
@@ -637,7 +637,7 @@ export async function transferItemAction(payload: z.infer<typeof transferItemSch
     return { ok: false as const, error: 'Machine access denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
   const epc = normalizeEpc(parsed.data.epc);
   if (!EPC_REGEX.test(epc)) {
     return { ok: false as const, error: 'Invalid EPC format' };

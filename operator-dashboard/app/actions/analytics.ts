@@ -29,7 +29,7 @@ type ActionResult = {
 
 async function getOperatorContext() {
   const supabase = createServerClient();
-  const db = supabase as any;
+  const db = supabase;
 
   const {
     data: { user },
@@ -78,7 +78,7 @@ export async function upsertCategoryCogsAction(payload: z.infer<typeof upsertCat
     return { ok: false, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const { data: categoryData } = await adminDb
     .from('product_categories')
@@ -145,7 +145,7 @@ export async function upsertProductCogsAction(payload: z.infer<typeof upsertProd
     return { ok: false, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const { data: productData } = await adminDb
     .from('products')
@@ -212,7 +212,7 @@ export async function removeCogsSettingAction(payload: z.infer<typeof removeCogs
     return { ok: false, error: 'Permission denied' };
   }
 
-  const adminDb = createAdminClient() as any;
+  const adminDb = createAdminClient();
 
   const { data: existingData } = await adminDb
     .from('cogs_settings')

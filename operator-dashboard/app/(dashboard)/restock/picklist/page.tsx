@@ -14,7 +14,7 @@ export default async function RestockPicklistPage({
   searchParams: Record<string, string | string[] | undefined>;
 }) {
   const supabase = createServerClient();
-  const db = supabase as any;
+  const db = supabase;
 
   const {
     data: { user },

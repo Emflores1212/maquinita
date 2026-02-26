@@ -8,21 +8,8 @@ import {
   updateConsumerNotificationOptInAction,
 } from '@/app/actions/consumer';
 import type { ConsumerFeedbackTarget, ConsumerPurchaseRow } from '@/components/consumer/types';
-
-function money(value: number, locale = 'en-US') {
-  return new Intl.NumberFormat(locale, {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-  }).format(value);
-}
-
-function urlBase64ToUint8Array(base64String: string) {
-  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-  const rawData = window.atob(base64);
-  return Uint8Array.from([...rawData].map((char) => char.charCodeAt(0)));
-}
+import { formatDateTime, formatMoney } from '@/lib/format';
+import { isPushSupported, subscribeToPush, unsubscribeFromPush } from '@/lib/push-client';
 
 type FeedbackDraft = {
   rating: number;
@@ -87,7 +74,7 @@ export default function ConsumerProfileClient({
   };
 
   const enablePush = async () => {
-    if (!('Notification' in window) || !('serviceWorker' in navigator) || !('PushManager' in window)) {
+    if (!isPushSupported()) {
       setErrorMessage(t('pushNotSupported'));
       setPushEnabled(false);
       return;
@@ -107,15 +94,7 @@ export default function ConsumerProfileClient({
     }
 
     const scope = `/${slug}/`;
-    const registration = await navigator.serviceWorker.register('/sw.js', { scope });
-    let subscription = await registration.pushManager.getSubscription();
-
-    if (!subscription) {
-      subscription = await registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(vapidKey),
-      });
-    }
+    const subscription = await subscribeToPush(vapidKey, { scope });
 
     const response = await fetch('/api/consumer/push-subscribe', {
       method: 'POST',
@@ -137,13 +116,9 @@ export default function ConsumerProfileClient({
 
   const disablePush = async () => {
     const scope = `/${slug}/`;
-    const registration = await navigator.serviceWorker.getRegistration(scope);
-    const subscription = await registration?.pushManager.getSubscription();
+    const { endpoint } = await unsubscribeFromPush({ scope });
 
-    if (subscription) {
-      const endpoint = subscription.endpoint;
-      await subscription.unsubscribe().catch(() => undefined);
-
+    if (endpoint) {
       await fetch('/api/consumer/push-subscribe', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
@@ -207,7 +182,7 @@ export default function ConsumerProfileClient({
 
         <div className="mt-4 rounded-xl px-4 py-4 text-white" style={{ backgroundColor: 'var(--brand-primary, #0D2B4E)' }}>
           <p className="text-xs font-semibold uppercase tracking-wide text-white/80">{t('credits')}</p>
-          <p className="text-3xl font-extrabold">{money(creditBalance)}</p>
+          <p className="text-3xl font-extrabold">{formatMoney(creditBalance)}</p>
         </div>
       </section>
 
@@ -233,8 +208,8 @@ export default function ConsumerProfileClient({
           {purchases.map((purchase) => (
             <article key={purchase.id} className="rounded-lg border border-slate-200 p-3">
               <div className="flex items-center justify-between gap-2">
-                <p className="text-sm font-semibold text-slate-900">{money(purchase.amount)}</p>
-                <p className="text-xs text-slate-500">{new Date(purchase.createdAt).toLocaleString()}</p>
+                <p className="text-sm font-semibold text-slate-900">{formatMoney(purchase.amount)}</p>
+                <p className="text-xs text-slate-500">{formatDateTime(purchase.createdAt)}</p>
               </div>
               <p className="mt-1 text-xs text-slate-600">{purchase.machineName}</p>
               <p className="text-xs text-slate-500">{purchase.itemsSummary}</p>
