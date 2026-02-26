@@ -341,8 +341,9 @@
     "offlineSyncToast": "Transacciones offline sincronizadas.",
     "banner": {
       "title": "Activa alertas push",
-      "description": "Recibe alertas criticas de maquinas en tiempo real en este dispositivo.",
+      "description": "Recibe alertas criticas de maquinas en tiempo real en este dispositivo. Tambien puedes administrar notificaciones en la pestana de Configuracion.",
       "action": "Activar notificaciones",
+      "dismiss": "Cerrar banner",
       "enabling": "Activando...",
       "permissionDenied": "No se otorgo permiso de notificaciones.",
       "missingKey": "Falta NEXT_PUBLIC_VAPID_PUBLIC_KEY en el entorno.",
@@ -820,6 +821,24 @@
       "title": "Configuracion de Rentabilidad",
       "subtitle": "Define porcentajes COGS por categoria y producto para el reporte de rentabilidad.",
       "open": "Abrir Configuracion de Rentabilidad"
+    },
+    "notifications": {
+      "title": "Opciones de Notificaciones",
+      "subtitle": "Administra notificaciones push para este dispositivo y controla la visibilidad del banner en el dashboard.",
+      "statusEnabled": "Las notificaciones push estan activadas en este dispositivo.",
+      "statusDisabled": "Las notificaciones push estan desactivadas en este dispositivo.",
+      "notSupported": "Este navegador no soporta notificaciones push.",
+      "enableAction": "Activar notificaciones",
+      "disableAction": "Desactivar notificaciones",
+      "restoreBanner": "Mostrar Banner del Dashboard",
+      "working": "Procesando...",
+      "enabled": "Notificaciones activadas para este dispositivo.",
+      "disabled": "Notificaciones desactivadas para este dispositivo.",
+      "bannerRestored": "Se restauro el banner de notificaciones del dashboard.",
+      "permissionDenied": "No se otorgo permiso de notificaciones.",
+      "missingKey": "Falta NEXT_PUBLIC_VAPID_PUBLIC_KEY en el entorno.",
+      "subscribeError": "No se pudo activar notificaciones push.",
+      "unsubscribeError": "No se pudo desactivar notificaciones push."
     }
   },
   "financialsPage": {

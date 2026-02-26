@@ -341,8 +341,9 @@
     "offlineSyncToast": "Offline transactions synced.",
     "banner": {
       "title": "Enable push alerts",
-      "description": "Receive real-time critical machine notifications on this device.",
+      "description": "Receive real-time critical machine notifications on this device. You can also manage notifications in the Settings tab.",
       "action": "Enable Notifications",
+      "dismiss": "Dismiss banner",
       "enabling": "Enabling...",
       "permissionDenied": "Notification permission was not granted.",
       "missingKey": "Missing NEXT_PUBLIC_VAPID_PUBLIC_KEY in environment.",
@@ -820,6 +821,24 @@
       "title": "Profitability Settings",
       "subtitle": "Set COGS percentages by category and product to power machine profitability analytics.",
       "open": "Open Profitability Settings"
+    },
+    "notifications": {
+      "title": "Notification Options",
+      "subtitle": "Manage push notifications for this device and control dashboard banner visibility.",
+      "statusEnabled": "Push notifications are enabled on this device.",
+      "statusDisabled": "Push notifications are disabled on this device.",
+      "notSupported": "Push notifications are not supported in this browser.",
+      "enableAction": "Enable Notifications",
+      "disableAction": "Disable Notifications",
+      "restoreBanner": "Show Dashboard Banner Again",
+      "working": "Working...",
+      "enabled": "Notifications enabled for this device.",
+      "disabled": "Notifications disabled for this device.",
+      "bannerRestored": "Dashboard notification banner restored.",
+      "permissionDenied": "Notification permission was not granted.",
+      "missingKey": "Missing NEXT_PUBLIC_VAPID_PUBLIC_KEY in environment.",
+      "subscribeError": "Unable to enable push notifications.",
+      "unsubscribeError": "Unable to disable push notifications."
     }
   },
   "financialsPage": {

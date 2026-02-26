@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import AccessDenied from '@/components/auth/AccessDenied';
+import NotificationSettingsCard from '@/components/settings/NotificationSettingsCard';
 import ReceiptTemplateSettings from '@/components/settings/ReceiptTemplateSettings';
 import { hasPermission, type UserRole } from '@/lib/permissions';
 import { createServerClient } from '@/lib/supabase';
@@ -47,6 +48,8 @@ export default async function SettingsPage() {
 
   return (
     <div className="space-y-4">
+      <NotificationSettingsCard />
+
       <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
         <h2 className="text-lg font-bold text-slate-900">Integration Hub</h2>
         <p className="mt-1 text-sm text-slate-600">Manage API keys, webhooks, and external integrations.</p>

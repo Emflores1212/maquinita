@@ -5,8 +5,6 @@ import { BellRing } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/components/providers/AuthProvider';
 
-const BANNER_DISMISSED_KEY = 'maquinita_notifications_banner_dismissed';
-
 function base64UrlToUint8Array(base64String: string) {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
   const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
@@ -20,12 +18,11 @@ function base64UrlToUint8Array(base64String: string) {
   return outputArray;
 }
 
-export default function EnableNotificationsBanner() {
-  const t = useTranslations('notifications.banner');
+export default function NotificationSettingsCard() {
+  const t = useTranslations('settingsPage.notifications');
   const { user, operatorId } = useAuth();
   const [permission, setPermission] = useState<NotificationPermission>('default');
   const [isEnabled, setIsEnabled] = useState(false);
-  const [isDismissed, setIsDismissed] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -36,23 +33,18 @@ export default function EnableNotificationsBanner() {
 
   useEffect(() => {
     if (!isSupported) return;
-    setIsDismissed(window.localStorage.getItem(BANNER_DISMISSED_KEY) === '1');
     setPermission(Notification.permission);
 
     let cancelled = false;
-
     const checkExistingSubscription = async () => {
       try {
         const registration = await navigator.serviceWorker.getRegistration();
         const subscription = await registration?.pushManager.getSubscription();
-
         if (!cancelled) {
           setIsEnabled(Boolean(subscription));
         }
       } catch {
-        if (!cancelled) {
-          setIsEnabled(false);
-        }
+        if (!cancelled) setIsEnabled(false);
       }
     };
 
@@ -63,18 +55,12 @@ export default function EnableNotificationsBanner() {
     };
   }, [isSupported]);
 
-  if (!isSupported || !user || !operatorId || permission === 'denied' || isEnabled || isDismissed) {
+  if (!user || !operatorId) {
     return null;
   }
 
-  const dismissBanner = () => {
-    setIsDismissed(true);
-    window.localStorage.setItem(BANNER_DISMISSED_KEY, '1');
-  };
-
   const enableNotifications = () => {
     setFeedback(null);
-
     startTransition(async () => {
       try {
         const requestedPermission = await Notification.requestPermission();
@@ -115,44 +101,82 @@ export default function EnableNotificationsBanner() {
         }
 
         setIsEnabled(true);
+        setPermission('granted');
+        setFeedback(t('enabled'));
       } catch {
         setFeedback(t('subscribeError'));
       }
     });
   };
 
+  const disableNotifications = () => {
+    setFeedback(null);
+    startTransition(async () => {
+      try {
+        const registration = await navigator.serviceWorker.getRegistration();
+        const subscription = await registration?.pushManager.getSubscription();
+        if (!subscription) {
+          setIsEnabled(false);
+          setFeedback(t('disabled'));
+          return;
+        }
+
+        await fetch('/api/push/subscribe', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ endpoint: subscription.endpoint }),
+        });
+
+        await subscription.unsubscribe();
+        setIsEnabled(false);
+        setFeedback(t('disabled'));
+      } catch {
+        setFeedback(t('unsubscribeError'));
+      }
+    });
+  };
+
   return (
-    <div className="mb-4 rounded-xl border border-sky-200 bg-sky-50 p-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex min-w-0 items-start gap-3">
-          <span className="mt-0.5 rounded-md bg-sky-100 p-2 text-sky-700">
-            <BellRing className="h-5 w-5" />
-          </span>
-          <div className="min-w-0">
-            <p className="text-sm font-semibold text-sky-900">{t('title')}</p>
-            <p className="text-sm text-sky-800">{t('description')}</p>
-            {feedback ? <p className="mt-1 text-xs text-red-600">{feedback}</p> : null}
+    <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div className="flex items-start gap-3">
+        <span className="rounded-md bg-sky-100 p-2 text-sky-700">
+          <BellRing className="h-5 w-5" />
+        </span>
+        <div className="min-w-0 flex-1">
+          <h2 className="text-lg font-bold text-slate-900">{t('title')}</h2>
+          <p className="mt-1 text-sm text-slate-600">{t('subtitle')}</p>
+          <div className="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
+            <p className="text-sm font-medium text-slate-800">
+              {isSupported ? (isEnabled ? t('statusEnabled') : t('statusDisabled')) : t('notSupported')}
+            </p>
+            <p className="mt-1 text-xs text-slate-500">
+              {permission === 'denied' ? t('permissionDenied') : t('subtitle')}
+            </p>
+          </div>
+          {feedback ? <p className="mt-2 text-xs font-medium text-slate-600">{feedback}</p> : null}
+
+          <div className="mt-3 grid gap-2 sm:grid-cols-2">
+            <button
+              type="button"
+              onClick={enableNotifications}
+              disabled={!isSupported || isPending || permission === 'denied'}
+              className="min-h-12 rounded-lg bg-[#0D2B4E] px-4 py-3 text-sm font-semibold text-white hover:bg-[#0A2240] disabled:opacity-60"
+            >
+              {isPending ? t('working') : t('enableAction')}
+            </button>
+            <button
+              type="button"
+              onClick={disableNotifications}
+              disabled={!isSupported || isPending || !isEnabled}
+              className="min-h-12 rounded-lg border border-slate-300 px-4 py-3 text-sm font-semibold text-slate-700 disabled:opacity-60"
+            >
+              {t('disableAction')}
+            </button>
           </div>
         </div>
-
-        <div className="flex gap-2 self-end sm:self-auto">
-          <button
-            type="button"
-            onClick={dismissBanner}
-            className="min-h-12 rounded-lg border border-sky-300 bg-white px-4 py-3 text-sm font-semibold text-sky-800 hover:bg-sky-100"
-          >
-            Dismiss
-          </button>
-          <button
-            type="button"
-            onClick={enableNotifications}
-            disabled={isPending}
-            className="min-h-12 rounded-lg bg-[#0D2B4E] px-4 py-3 text-sm font-semibold text-white hover:bg-[#0A2240] disabled:opacity-70"
-          >
-            {isPending ? t('enabling') : t('action')}
-          </button>
-        </div>
       </div>
-    </div>
+    </section>
   );
 }
